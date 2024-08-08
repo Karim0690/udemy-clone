@@ -1,4 +1,4 @@
-import { categoryModel } from '../Database/Models/category.model.js';
+import { categoryModel } from '../Models/category.model.js';
 import catchAsync from './../utils/catchAsync.js';
 
 const createCategory = catchAsync(async (req, res, next) => {

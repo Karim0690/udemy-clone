@@ -8,16 +8,23 @@ import categoryRouter from "./router/category.router.js";
 import subcategoryRouter from "./router/subcategory.router.js";
 import authRouter from "./router/auth.js";
 import OrderRouter from "./router/order.router.js";
-
+import logger from "./middleware/logger.js"
+import {review} from "./router/review.router.js"
 const app = express();
 dotenv.config();
 
 app.use(express.json());
+app.use(logger)
+
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
+app.use("/reviews",review);
+
+
+
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
