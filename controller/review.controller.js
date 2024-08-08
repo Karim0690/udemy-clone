@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler'
-import Review, { validateCreatingReview, validateUpdateReview } from '../Database/Models/review.model'
+import  { reviewModel,validateCreatingReview, validateUpdateReview } from '../Database/Models/review.model.js'
 
 /**
 * @desc Get All Reviews
@@ -8,7 +8,13 @@ import Review, { validateCreatingReview, validateUpdateReview } from '../Databas
 * @access public (user) 
 */
 const getAllReview = asyncHandler( async(req,res)=>{
-    let reviews = await Review.find().populate("user").populate("course");
+    let reviews = await reviewModel.find().populate({
+        path: 'user',
+        select: 'name email' 
+      }).populate({
+        path: 'course',
+        select: 'title _id' 
+      });
 
     res.status(201).json({data:reviews})
     
@@ -20,7 +26,13 @@ const getAllReview = asyncHandler( async(req,res)=>{
 * @access protected (user) 
 */
 const getReviewById = asyncHandler( async(req,res)=>{
-    let review = await Review.findById(req.params.id).populate("user").populate("course");
+    let review = await reviewModel.findById(req.params.id).populate({
+        path: 'user',
+        select: 'name email' 
+      }).populate({
+        path: 'course',
+        select: 'title _id' 
+      });
 
     res.status(201).json({data:review})
     
@@ -39,7 +51,7 @@ const createReview = asyncHandler( async(req,res)=>{
         return res.status(400).json({message:error.details[0].message});
     }
 
-    let review = new Review({
+    let review = new reviewModel({
         course: req.body.course,
         user: req.body.user,
         rating: req.body.rating,
@@ -65,7 +77,7 @@ const updateReviewById = asyncHandler( async(req,res)=>{
         return res.status(400).json({message:error.details[0].message});
     }
 
-    const updateReview = await Review.findByIdAndUpdate(req.params.id,
+    const updateReview = await reviewModel.findByIdAndUpdate(req.params.id,
         {$set:{
             rating: req.body.rating,
             comment: req.body.comment 
@@ -83,10 +95,10 @@ const updateReviewById = asyncHandler( async(req,res)=>{
 */
 const deleteReviewById = asyncHandler( async(req,res)=>{
     
-    const review = await Review.find(req.params.id)
+    const review = await reviewModel.find(req.params.id)
     if(review)
     {
-        await Review.findByIdAndDelete(req.params.id);
+        await reviewModel.findByIdAndDelete(req.params.id);
         res.status(200).json({message:"review has been successfully revomed" , data:review});
     }
     else{

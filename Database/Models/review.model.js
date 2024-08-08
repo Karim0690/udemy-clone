@@ -1,9 +1,9 @@
-import mongoose, { model } from "mongoose";
-
+import mongoose from "mongoose";
+import joi from "joi"
 const reviewSchema = new mongoose.Schema({
   course:{
     type: mongoose.Types.ObjectId,
-    ref: 'course',// NOTE : need to be update when we finished the collection 
+    ref: 'Course',// NOTE : need to be update when we finished the collection 
     required:true
 }  , 
 user:{
@@ -27,26 +27,26 @@ comment:{
 
 function validateCreatingReview(obj)
 {
-    const schema = obj.object({
+    const schema = joi.object({
         course: joi.string().required(),
         user: joi.string().required(),
         rating:joi.number().min(1).max(5).required(),
-        comment:joi.String().trim()
+        comment:joi.string().trim()
     })
     return schema.validate(obj);
 }
 function validateUpdateReview(obj)
 {
-    const schema = obj.object({
+    const schema = joi.object({
         rating:joi.number().min(1).max(5),
         comment:joi.string()
     })
     return schema.validate(obj); 
 }
 
-export default reviewModel = mongoose.model("Review",reviewSchema); 
+let  reviewModel = mongoose.model("Review",reviewSchema); 
 export {
     validateCreatingReview,
-    validateUpdateReview
-
+    validateUpdateReview,
+    reviewModel
 }

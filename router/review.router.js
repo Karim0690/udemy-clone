@@ -7,7 +7,7 @@ import {
     deleteReviewById
 } from "../controller/review.controller.js"
 
-export default router =express.Router(); 
+let  router = express.Router(); 
 
 router.route("/")
     .get(getAllReview).post(createReview); 
@@ -17,4 +17,4 @@ router.route("/:id")
     .put(updateReviewById)
     .delete(deleteReviewById)
 
-    
+export default router

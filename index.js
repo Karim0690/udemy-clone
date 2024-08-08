@@ -8,32 +8,35 @@ import categoryRouter from "./router/category.router.js";
 import subcategoryRouter from "./router/subcategory.router.js";
 import authRouter from "./router/auth.js";
 import OrderRouter from "./router/order.router.js";
-<<<<<<< HEAD
-import logger from "./middleware/logger.js"
-import {review} from "./router/review.router.js"
-=======
+import {logger} from "./middleware/logger.js"
 import courseRouter from "./router/course.router.js"
+import review from "./router/review.router.js"
+import question from "./router/question.js"
+import quiz from "./router/quiz.js"
+import lecture from "./router/lecture.js"
+import assignment from "./router/assignment.js"
+import courseContent from "./router/courseContent.js"
 
->>>>>>> bef81ada8319772aae024ddb8757ee4077e476d5
 const app = express();
 dotenv.config();
 
 app.use(express.json());
-app.use(logger)
+app.use(logger);
 
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
-<<<<<<< HEAD
-app.use("/reviews",review);
-
-
-
-=======
 app.use("/course",courseRouter);
->>>>>>> bef81ada8319772aae024ddb8757ee4077e476d5
+
+app.use("/reviews",review);
+app.use("/questions",question);
+app.use("/quizzes",quiz);
+app.use("/lectures",lecture);
+app.use("/assignments",assignment);
+app.use("/course-content",courseContent);
+
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });

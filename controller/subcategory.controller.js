@@ -1,4 +1,4 @@
-import { subcategoryModel } from '../Models/subcategory.model.js';
+import { subcategoryModel } from '../Database/Models/subcategory.model.js';
 
 const createSubcategory = async (req, res) => {
   let result = new subcategoryModel(req.body);

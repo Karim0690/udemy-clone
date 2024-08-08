@@ -1,4 +1,4 @@
-import { userModel } from '../Models/user.model.js';
+import { userModel } from '../Database/Models/user.model.js';
 import catchAsync from '../utils/catchAsync.js';
 import AppError from './../utils/appError.js';
 import jwt from 'jsonwebtoken';

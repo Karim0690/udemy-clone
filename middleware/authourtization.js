@@ -2,7 +2,7 @@ import catchAsync from "./../utils/catchAsync.js";
 import AppError from "./../utils/appError.js";
 import jwt from "jsonwebtoken";
 import { promisify } from "util";
-import { userModel } from "../Models/user.model.js";
+import { userModel } from "../Database/Models/user.model.js";
 
 export const protectedRoutes = catchAsync(async (req, res, next) => {
   let { authorization } = req.headers;
