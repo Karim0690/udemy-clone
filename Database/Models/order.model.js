@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+import joi from "joi";
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -38,5 +38,6 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 export default orderModel = mongoose.model("Order", orderSchema);
