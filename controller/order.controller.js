@@ -1,4 +1,4 @@
-import Order from "../models/orderModel.js";
+import Order from "../Database/Models/order.model.js";
 import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
 

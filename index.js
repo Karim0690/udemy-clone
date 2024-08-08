@@ -8,6 +8,7 @@ import categoryRouter from "./router/category.router.js";
 import subcategoryRouter from "./router/subcategory.router.js";
 import authRouter from "./router/auth.js";
 import OrderRouter from "./router/order.router.js";
+import courseRouter from "./router/course.router.js"
 
 const app = express();
 dotenv.config();
@@ -18,6 +19,7 @@ app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
+app.use("/course",courseRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
