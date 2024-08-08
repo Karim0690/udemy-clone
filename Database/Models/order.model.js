@@ -36,8 +36,12 @@ const orderSchema = new mongoose.Schema(
       },
     },
   },
-  { timestamps: true }
+  { timestamps: true, collection: "Order" }
 );
 
+<<<<<<< HEAD
 
 export default orderModel = mongoose.model("Order", orderSchema);
+=======
+export default mongoose.model("Order", orderSchema);
+>>>>>>> bef81ada8319772aae024ddb8757ee4077e476d5
