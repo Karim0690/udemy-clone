@@ -17,6 +17,8 @@ import quiz from "./router/quiz.router.js";
 import lecture from "./router/lecture.router.js";
 import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
+import cartRouter from "./router/cart.router.js";
+import couponRouter from "./router/coupon.router.js";
 
 const app = express();
 dotenv.config();
@@ -37,7 +39,8 @@ app.use("/quizzes", quiz);
 app.use("/lectures", lecture);
 app.use("/assignments", assignment);
 app.use("/course-content", courseContent);
-
+app.use("/cart", cartRouter);
+app.use("/coupon", couponRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
