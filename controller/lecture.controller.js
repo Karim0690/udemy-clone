@@ -1,6 +1,6 @@
-
-import asyncHandler from 'express-async-handler';
-import { Lecture, validateCreatingLecture, validateUpdateLecture } from '../Database/Models/lecture.model.js';
+import asyncHandler from "express-async-handler";
+import { Lecture } from "../Database/Models/lecture.model.js";
+import AppError from "../utils/appError.js";
 
 /**
  * @desc Create a new lecture
@@ -9,17 +9,13 @@ import { Lecture, validateCreatingLecture, validateUpdateLecture } from '../Data
  * @access public
  */
 export const createLecture = asyncHandler(async (req, res) => {
-    const { error } = validateCreatingLecture(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-
-
-    const lecture = new Lecture(req.body);
-    await lecture.save();
-    res.status(201).json(lecture);
-
-
+  // const { error } = validateCreatingLecture(req.body);
+  // if (error) {
+  //     return res.status(400).json({ error: error.details[0].message });
+  // }
+  const lecture = new Lecture(req.body);
+  await lecture.save();
+  res.status(201).json({ message: "success", data: lecture });
 });
 
 /**
@@ -28,20 +24,16 @@ export const createLecture = asyncHandler(async (req, res) => {
  * @method PUT
  * @access public
  */
-export const updateLecture = asyncHandler(async (req, res) => {
-    const { error } = validateUpdateLecture(req.body);
-    if (error) {
-        return res.status(400).json({ error: error.details[0].message });
-    }
-
-
-    const lecture = await Lecture.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!lecture) {
-        return res.status(404).json({ message: 'Lecture not found' });
-    }
-    res.status(200).json(lecture);
-
-
+export const updateLecture = asyncHandler(async (req, res, next) => {
+  // const { error } = validateUpdateLecture(req.body);
+  // if (error) {
+  //     return res.status(400).json({ error: error.details[0].message });
+  // }
+  const lecture = await Lecture.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!lecture) return next(new AppError("Lecture not found", 404));
+  res.status(200).json({ message: "success", data: lecture });
 });
 
 /**
@@ -50,13 +42,10 @@ export const updateLecture = asyncHandler(async (req, res) => {
  * @method GET
  * @access public
  */
-export const getLectureById = asyncHandler(async (req, res) => {
-    const lecture = await Lecture.findById(req.params.id);
-    if (!lecture) {
-        return res.status(404).json({ message: 'Lecture not found' });
-    }
-    res.status(200).json(lecture);
-
+export const getLectureById = asyncHandler(async (req, res, next) => {
+  const lecture = await Lecture.findById(req.params.id);
+  if (!lecture) return next(new AppError("Lecture not found", 404));
+  res.status(200).json({ message: "success", data: lecture });
 });
 
 /**
@@ -66,9 +55,8 @@ export const getLectureById = asyncHandler(async (req, res) => {
  * @access public
  */
 export const getAllLectures = asyncHandler(async (req, res) => {
-    const lectures = await Lecture.find();
-    res.status(200).json({ data: lectures });
-
+  const lectures = await Lecture.find();
+  res.status(200).json({ data: lectures });
 });
 
 /**
@@ -77,12 +65,8 @@ export const getAllLectures = asyncHandler(async (req, res) => {
  * @method DELETE
  * @access public
  */
-export const deleteLecture = asyncHandler(async (req, res) => {
-
-    const lecture = await Lecture.findByIdAndDelete(req.params.id);
-    if (!lecture) {
-        return res.status(404).json({ message: 'Lecture not found' });
-    }
-    res.status(200).json({ message: 'Lecture deleted successfully' });
-
+export const deleteLecture = asyncHandler(async (req, res, next) => {
+  const lecture = await Lecture.findByIdAndDelete(req.params.id);
+  if (!lecture) return next(new AppError("Lecture not found", 404));
+  res.status(200).json({ message: "Lecture deleted successfully" });
 });

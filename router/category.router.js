@@ -5,11 +5,18 @@ import {
   restrictedTo,
 } from "../middleware/authourtization.js";
 
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "../validation/category.schema.js";
+
+import {validation} from "../middleware/validation.js";
+
 const categoryRouter = express.Router();
 
 categoryRouter
   .route("/")
-  .post(categoryController.createCategory)
+  .post(validation(createCategorySchema), categoryController.createCategory)
   .get(
     protectedRoutes,
     restrictedTo("instructor"),
@@ -19,7 +26,7 @@ categoryRouter
 categoryRouter
   .route("/:id")
   .get(categoryController.getCategory)
-  .patch(categoryController.updateCategory)
+  .patch(validation(updateCategorySchema), categoryController.updateCategory)
   .delete(categoryController.deleteCategory);
 
 export default categoryRouter;

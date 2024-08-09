@@ -1,20 +1,30 @@
-import express from 'express';
+import express from "express";
 import {
-    getAllReview,
-    getReviewById,
-    createReview,
-    updateReviewById,
-    deleteReviewById
-} from "../controller/review.controller.js"
+  getAllReview,
+  getReviewById,
+  createReview,
+  updateReviewById,
+  deleteReviewById,
+} from "../controller/review.controller.js";
 
-let  router = express.Router(); 
+import {
+  validateCreatingReview,
+  validateUpdateReview,
+} from "../validation/review.schema.js";
 
-router.route("/")
-    .get(getAllReview).post(createReview); 
+import { validation } from "../middleware/validation.js";
 
-router.route("/:id")
-    .get(getReviewById)
-    .put(updateReviewById)
-    .delete(deleteReviewById)
+let router = express.Router();
 
-export default router
+router
+  .route("/")
+  .get(getAllReview)
+  .post(validation(validateCreatingReview), createReview);
+
+router
+  .route("/:id")
+  .get(getReviewById)
+  .put(validation(validateUpdateReview), updateReviewById)
+  .delete(deleteReviewById);
+
+export default router;

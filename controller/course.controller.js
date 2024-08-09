@@ -1,8 +1,9 @@
 import { cousreModel } from "../Database/Models/course.model.js";
-import catchAsync from "../utils/catchAsync.js";
+import asyncHandler from "express-async-handler";
+import AppError from "../utils/appError.js";
 
 //create____________________________________
-export const createCourse = catchAsync(async (req, res) => {
+export const createCourse = asyncHandler(async (req, res) => {
   const newCourse = await cousreModel.create(req.body);
   res.status(201).json({
     status: "success",
@@ -13,11 +14,10 @@ export const createCourse = catchAsync(async (req, res) => {
 });
 
 //read Courses_________________________________________
-export const getCourses = catchAsync(async (req, res) => {
-  const courses = await cousreModel.find({});
+export const getCourses = asyncHandler(async (req, res) => {
+  const courses = await cousreModel.find();
   res.status(200).json({
     status: "success",
-    // results: courses.length,
     data: {
       courses,
     },
@@ -25,16 +25,12 @@ export const getCourses = catchAsync(async (req, res) => {
 });
 
 //read course by id__________________________________
-export const getCourse = catchAsync(async (req, res) => {
+export const getCourse = asyncHandler(async (req, res, next) => {
   const course = await cousreModel.findById(req.params.id);
 
   if (!course) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Course not found",
-    });
+    return next(new AppError("Course not found", 404));
   }
-
   res.status(200).json({
     status: "success",
     data: {
@@ -44,15 +40,12 @@ export const getCourse = catchAsync(async (req, res) => {
 });
 
 //update________________________________________
-export const updateCourse = catchAsync(async (req, res) => {
+export const updateCourse = asyncHandler(async (req, res, next) => {
   const course = await cousreModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
   if (!course) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Course not found",
-    });
+    return next(new AppError("Course not found", 404));
   }
 
   res.status(200).json({
@@ -64,15 +57,13 @@ export const updateCourse = catchAsync(async (req, res) => {
 });
 
 //delete________________________________________
-export const deleteCourse = catchAsync(async (req, res) => {
+export const deleteCourse = asyncHandler(async (req, res, next) => {
   const course = await cousreModel.findByIdAndDelete(req.params.id);
 
   if (!course) {
-    return res.status(404).json({
-      status: "fail",
-      message: "Course not found",
-    });
+    return next(new AppError("Course not found", 404));
   }
+
   return res.status(204).json({
     status: "success",
   });

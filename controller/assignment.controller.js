@@ -1,6 +1,6 @@
-
-import asyncHandler from 'express-async-handler';
-import { Assignment, validateCreatingAssignment, validateUpdateAssignment } from '../Database/Models/assignment.model.js';
+import asyncHandler from "express-async-handler";
+import { Assignment } from "../Database/Models/assignment.model.js";
+import AppError from "../utils/appError.js";
 
 /**
  * @desc Create a new assignment
@@ -9,16 +9,9 @@ import { Assignment, validateCreatingAssignment, validateUpdateAssignment } from
  * @access public
  */
 export const createAssignment = asyncHandler(async (req, res) => {
-  const { error } = validateCreatingAssignment(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-
-  
-    const assignment = new Assignment(req.body);
-    await assignment.save();
-    res.status(201).json(assignment);
-  
+  const assignment = new Assignment(req.body);
+  await assignment.save();
+  res.status(201).json(assignment);
 });
 
 /**
@@ -27,20 +20,14 @@ export const createAssignment = asyncHandler(async (req, res) => {
  * @method PUT
  * @access public
  */
-export const updateAssignment = asyncHandler(async (req, res) => {
-  const { error } = validateUpdateAssignment(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
-
-  
-    const assignment = await Assignment.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
-    }
-    res.status(200).json(assignment);
-  
-    
+export const updateAssignment = asyncHandler(async (req, res, next) => {
+  const assignment = await Assignment.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+  if (!assignment) return next(new AppError("Assignment not found", 404));
+  res.status(200).json(assignment);
 });
 
 /**
@@ -49,16 +36,10 @@ export const updateAssignment = asyncHandler(async (req, res) => {
  * @method GET
  * @access public
  */
-export const getAssignmentById = asyncHandler(async (req, res) => {
-  
-    
-    const assignment = await Assignment.findById(req.params.id);
-    if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
-    }
-    res.status(200).json(assignment);
-  
-    
+export const getAssignmentById = asyncHandler(async (req, res, next) => {
+  const assignment = await Assignment.findById(req.params.id);
+  if (!assignment) return next(new AppError("Assignment not found", 404));
+  res.status(200).json(assignment);
 });
 
 /**
@@ -68,10 +49,8 @@ export const getAssignmentById = asyncHandler(async (req, res) => {
  * @access public
  */
 export const getAllAssignments = asyncHandler(async (req, res) => {
-  
-    const assignments = await Assignment.find();
-    res.status(200).json({ data: assignments });
-  
+  const assignments = await Assignment.find();
+  res.status(200).json({ data: assignments });
 });
 
 /**
@@ -80,12 +59,8 @@ export const getAllAssignments = asyncHandler(async (req, res) => {
  * @method DELETE
  * @access public
  */
-export const deleteAssignment = asyncHandler(async (req, res) => {
-    const assignment = await Assignment.findByIdAndDelete(req.params.id);
-    if (!assignment) {
-      return res.status(404).json({ message: 'Assignment not found' });
-    }
-    res.status(200).json({ message: 'Assignment deleted successfully' });
-  
-    
+export const deleteAssignment = asyncHandler(async (req, res, next) => {
+  const assignment = await Assignment.findByIdAndDelete(req.params.id);
+  if (!assignment) return next(new AppError("Assignment not found", 404));
+  res.status(200).json({ message: "Assignment deleted successfully" });
 });

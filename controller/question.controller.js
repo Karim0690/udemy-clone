@@ -1,5 +1,6 @@
-import asyncHandler from 'express-async-handler';
-import { Question, validateCreatingQuestion, validateUpdateQuestion } from '../Database/Models/question.model.js';
+import asyncHandler from "express-async-handler";
+import { Question } from "../Database/Models/question.model.js";
+import AppError from "../utils/appError.js";
 
 /**
  * @desc Create a new question
@@ -8,14 +9,14 @@ import { Question, validateCreatingQuestion, validateUpdateQuestion } from '../D
  * @access public
  */
 export const createQuestion = asyncHandler(async (req, res) => {
-  const { error } = validateCreatingQuestion(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
+  // const { error } = validateCreatingQuestion(req.body);
+  // if (error) {
+  //   return res.status(400).json({ error: error.details[0].message });
+  // }
 
-    const question = new Question(req.body);
-    await question.save();
-    res.status(201).json(question);
+  const question = new Question(req.body);
+  await question.save();
+  res.status(201).json({ message: "success", data: question });
 });
 
 /**
@@ -24,18 +25,17 @@ export const createQuestion = asyncHandler(async (req, res) => {
  * @method PUT
  * @access public
  */
-export const updateQuestion = asyncHandler(async (req, res) => {
-  const { error } = validateUpdateQuestion(req.body);
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
+export const updateQuestion = asyncHandler(async (req, res, next) => {
+  // const { error } = validateUpdateQuestion(req.body);
+  // if (error) {
+  //   return res.status(400).json({ error: error.details[0].message });
+  // }
 
-    const question = await Question.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-    res.status(200).json(question);
- 
+  const question = await Question.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!question) return next(new AppError("Question not found", 404));
+  res.status(200).json({ message: "success", data: question });
 });
 
 /**
@@ -44,12 +44,10 @@ export const updateQuestion = asyncHandler(async (req, res) => {
  * @method GET
  * @access public
  */
-export const getQuestionById = asyncHandler(async (req, res) => {
-    const question = await Question.findById(req.params.id);
-    if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-    res.status(200).json(question);
+export const getQuestionById = asyncHandler(async (req, res, next) => {
+  const question = await Question.findById(req.params.id);
+  if (!question) return next(new AppError("Question not found", 404));
+  res.status(200).json({ message: "success", data: question });
 });
 
 /**
@@ -59,8 +57,8 @@ export const getQuestionById = asyncHandler(async (req, res) => {
  * @access public
  */
 export const getAllQuestions = asyncHandler(async (req, res) => {
-    const questions = await Question.find();
-    res.status(200).json({ data: questions });
+  const questions = await Question.find();
+  res.status(200).json({ message: "success", data: questions });
 });
 
 /**
@@ -70,9 +68,7 @@ export const getAllQuestions = asyncHandler(async (req, res) => {
  * @access public
  */
 export const deleteQuestion = asyncHandler(async (req, res) => {
-    const question = await Question.findByIdAndDelete(req.params.id);
-    if (!question) {
-      return res.status(404).json({ message: 'Question not found' });
-    }
-    res.status(200).json({ message: 'Question deleted successfully' });
+  const question = await Question.findByIdAndDelete(req.params.id);
+  if (!question) return next(new AppError("Question not found", 404));
+  res.status(200).json({ message: "Question deleted successfully" });
 });

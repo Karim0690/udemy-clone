@@ -10,18 +10,17 @@ const courseSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      // required: true,
+      required: true,
       minlength: 50,
       maxlength: 500,
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Instructor",
-      // required: true,
+      required: true,
     },
     price: {
       type: Number,
-      // required: true,
     },
     courseImage: {
       type: String,
@@ -34,16 +33,18 @@ const courseSchema = new mongoose.Schema(
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
-      // required: true,
+      required: true,
     },
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subcategory",
-      // required: true,
+      required: true,
     },
     rating: {
       average: {
         type: Number,
+        min: 0,
+        max: 5,
         default: 0,
       },
       count: {
@@ -59,7 +60,6 @@ const courseSchema = new mongoose.Schema(
     ],
     enrollments: {
       type: Number,
-      // required: true,
     },
     intendedLearns: [
       {
@@ -67,6 +67,6 @@ const courseSchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true , collection: 'Courses' }
+  { timestamps: true, collection: "Courses" }
 );
 export const cousreModel = mongoose.model("Course", courseSchema);

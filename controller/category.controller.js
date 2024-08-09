@@ -1,26 +1,24 @@
-
 import { categoryModel } from "../Database/Models/category.model.js";
-import catchAsync from "./../utils/catchAsync.js";
+import asyncHandler from "express-async-handler";
 
-
-const createCategory = catchAsync(async (req, res, next) => {
+const createCategory = asyncHandler(async (req, res, next) => {
   let result = new categoryModel(req.body);
   await result.save();
   res.status(201).json({ message: "success", result });
 });
 
-const getAllCategory = catchAsync(async (req, res, next) => {
+const getAllCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.find();
   res.status(200).json({ message: "success", result });
 });
 
-const getCategory = catchAsync(async (req, res, next) => {
+const getCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.findById(req.params.id);
   !result && res.status(404).json("Category not Found");
   result && res.status(200).json({ message: "success", result });
 });
 
-const updateCategory = catchAsync(async (req, res, next) => {
+const updateCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
@@ -28,7 +26,7 @@ const updateCategory = catchAsync(async (req, res, next) => {
   result && res.status(200).json({ message: "success", result });
 });
 
-const deleteCategory = catchAsync(async (req, res, next) => {
+const deleteCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.findByIdAndDelete(req.params.id);
   !result && res.status(404).json("Category not Found");
   result && res.status(200).json({ message: "success", result: null });

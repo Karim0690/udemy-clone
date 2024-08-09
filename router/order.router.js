@@ -5,9 +5,13 @@ import {
   getOrdersByUser,
 } from "../controller/order.controller.js";
 
+import { validateCreatingOrder } from "../validation/order.schema.js";
+
+import { validation } from "../middleware/validation.js";
+
 const OrderRouter = express.Router();
 
-OrderRouter.post("/", createOrder);
+OrderRouter.post("/", validation(validateCreatingOrder), createOrder);
 OrderRouter.get("/:id", getOrderById);
 OrderRouter.get("/user/:userId", getOrdersByUser);
 

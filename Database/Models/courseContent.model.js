@@ -1,6 +1,5 @@
-
 import mongoose from 'mongoose';
-import Joi from 'joi';
+// import Joi from 'joi';
 
 
 const courseContentSchema = new mongoose.Schema({
@@ -13,29 +12,29 @@ const courseContentSchema = new mongoose.Schema({
 const CourseContent = mongoose.model('CourseContent', courseContentSchema);
 
 
-const validateCreatingCourseContent = (obj) => {
-  const schema = Joi.object({
-    title: Joi.string().required(),
-    lectures: Joi.array().items(Joi.string()), 
-    quizzes: Joi.array().items(Joi.string()), 
-    assignments: Joi.array().items(Joi.string())
-  });
-  return schema.validate(obj);
-};
+// const validateCreatingCourseContent = (obj) => {
+//   const schema = Joi.object({
+//     title: Joi.string().required(),
+//     lectures: Joi.array().items(Joi.string()), 
+//     quizzes: Joi.array().items(Joi.string()), 
+//     assignments: Joi.array().items(Joi.string())
+//   });
+//   return schema.validate(obj);
+// };
 
 
-const validateUpdateCourseContent = (obj) => {
-  const schema = Joi.object({
-    title: Joi.string(),
-    lectures: Joi.array().items(Joi.string()),
-    quizzes: Joi.array().items(Joi.string()), 
-    assignments: Joi.array().items(Joi.string())
-  });
-  return schema.validate(obj);
-};
+// const validateUpdateCourseContent = (obj) => {
+//   const schema = Joi.object({
+//     title: Joi.string(),
+//     lectures: Joi.array().items(Joi.string()),
+//     quizzes: Joi.array().items(Joi.string()), 
+//     assignments: Joi.array().items(Joi.string())
+//   });
+//   return schema.validate(obj);
+// };
 
 export {
   CourseContent,
-  validateCreatingCourseContent,
-  validateUpdateCourseContent
+  // validateCreatingCourseContent,
+  // validateUpdateCourseContent
 };

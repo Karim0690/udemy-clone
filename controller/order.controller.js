@@ -1,8 +1,9 @@
 import Order from "../Database/Models/order.model.js";
-import catchAsync from "../utils/catchAsync.js";
 import AppError from "../utils/appError.js";
+import asyncHandler from "express-async-handler";
 
-export const createOrder = catchAsync(async (req, res) => {
+
+export const createOrder = asyncHandler(async (req, res) => {
   const { user, cartItems, country, paymentMethod, summary } = req.body;
 
   const order = new Order({
@@ -21,7 +22,7 @@ export const createOrder = catchAsync(async (req, res) => {
   });
 });
 
-export const getOrderById = catchAsync(async (req, res, next) => {
+export const getOrderById = asyncHandler(async (req, res, next) => {
   const order = await Order.findById(req.params.id)
     .populate("user")
     .populate("cartItems.course");
@@ -36,7 +37,7 @@ export const getOrderById = catchAsync(async (req, res, next) => {
   });
 });
 
-export const getOrdersByUser = catchAsync(async (req, res, next) => {
+export const getOrdersByUser = asyncHandler(async (req, res, next) => {
   const orders = await Order.find({ user: req.params.userId }).populate(
     "cartItems.course"
   );
