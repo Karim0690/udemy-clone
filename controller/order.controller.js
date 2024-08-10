@@ -1,21 +1,30 @@
 import Order from "../Database/Models/order.model.js";
+import cartModel from "../Database/Models/cart.model.js";
 import AppError from "../utils/appError.js";
 import asyncHandler from "express-async-handler";
 
+export const createOrder = asyncHandler(async (req, res,next) => {
+  const cart = await cartModel.findById(req.params.cartId);
+  if (!cart) return next(new AppError("Cart not found", 404));
 
-export const createOrder = asyncHandler(async (req, res) => {
-  const { user, cartItems, country, paymentMethod, summary } = req.body;
+  const totalOrderPrice = cart.totalPriceAfterDiscount
+    ? cart.totalPriceAfterDiscount
+    : cart.totalPrice;
 
   const order = new Order({
-    user,
-    cartItems,
-    country,
-    paymentMethod,
-    summary,
+    user: req.user._id,
+    cartItems: cart.items,
+    country: req.body.country,
+    paymentMethod: req.body.paymentMethod,
+    summary: {
+      originalPrice: cart.totalPrice,
+      discount: cart.discount,
+      total: totalOrderPrice,
+    },
   });
 
   await order.save();
-
+  await cartModel.findByIdAndDelete(req.params.cartId);
   res.status(201).json({
     message: "success",
     data: order,
@@ -24,8 +33,8 @@ export const createOrder = asyncHandler(async (req, res) => {
 
 export const getOrderById = asyncHandler(async (req, res, next) => {
   const order = await Order.findById(req.params.id)
-    .populate("user")
-    .populate("cartItems.course");
+    .populate("user", "_id name email role")
+    .populate("cartItems.course", "_id title description instructor price");
 
   if (!order) {
     return next(new AppError("Order not found", 404));
