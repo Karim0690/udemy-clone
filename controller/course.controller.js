@@ -64,7 +64,8 @@ export const deleteCourse = asyncHandler(async (req, res, next) => {
     return next(new AppError("Course not found", 404));
   }
 
-  return res.status(204).json({
-    status: "success",
+  return res.status(201).json({
+    status: "course deleted success",
+    
   });
 });
