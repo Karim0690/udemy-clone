@@ -3,7 +3,7 @@ import * as userController from "../controller/user.controller.js";
 
 import {
   validateCreatingUser,
-  validateupdatingUser,
+  validateUpdatingUser,
 } from "../validation/user.schema.js";
 
 import { validation } from "../middleware/validation.js";
@@ -18,7 +18,7 @@ userRouter
 userRouter
   .route("/:id")
   .get(userController.getUser)
-  .put(validation(validateupdatingUser), userController.updateUser)
+  .put(validation(validateUpdatingUser), userController.updateUser)
   .delete(userController.deleteUser)
   .patch(userController.changeUserPassword);
 
