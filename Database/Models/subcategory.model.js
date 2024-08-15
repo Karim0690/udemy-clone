@@ -1,34 +1,35 @@
-import mongoose from 'mongoose';
-import slugify from 'slugify';
+import mongoose from "mongoose";
+import slugify from "slugify";
 
 const subcategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      unique: [true, 'Name is requierd'],
+      unique: [true, "Name is requierd"],
       trim: true,
       required: true,
-      minLength: [2, 'too Short brand name'],
+      minLength: [2, "too Short brand name"],
     },
     slug: {
       type: String,
       lowercase: true,
-      required: true,
     },
     category: {
       type: mongoose.Types.ObjectId,
-      ref: 'Category',
+      ref: "Category",
     },
   },
-  { timestamps: true, collection: 'Subcategory' }
+  { timestamps: true, collection: "Subcategory" }
 );
 
-subcategorySchema.pre('save', function (next) {
-  this.slug = slugify(this.name, { lower: true });
+subcategorySchema.pre("save", function (next) {
+  if (this.isModified("name") || this.isNew) {
+    this.slug = slugify(this.name, { lower: true });
+  }
   next();
 });
 
-subcategorySchema.pre('findOneAndUpdate', function (next) {
+subcategorySchema.pre("findOneAndUpdate", function (next) {
   const update = this.getUpdate();
   if (update.name) {
     update.$set.slug = slugify(update.name, { lower: true });
@@ -37,6 +38,6 @@ subcategorySchema.pre('findOneAndUpdate', function (next) {
 });
 
 export const subcategoryModel = mongoose.model(
-  'Subcategory',
+  "Subcategory",
   subcategorySchema
 );

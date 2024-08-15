@@ -22,7 +22,7 @@ subcategoryRouter
   .route("/:id")
   .get(subcategoryController.getSubcategory)
   .patch(
-    validation(createSubcategorySchema),
+    validation(updateSubcategorySchema),
     subcategoryController.updateSubcategory
   )
   .delete(subcategoryController.deleteSubcategory);
