@@ -33,12 +33,4 @@ export const restrictedTo = (...role) => {
     }
     next();
   });
-
-  function verifyTokenAndAuthorization(req,res,next)
-  {
-    protectedRoutes(req,res,()=>{
-      
-    })
-    
-  }
 };
