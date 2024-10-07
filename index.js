@@ -21,10 +21,12 @@ import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 dotenv.config();
 app.use(morgan("dev"));
 
-app.use(express.json());
 app.use(logger);
 
 app.use("/user", userRouter);
