@@ -19,6 +19,7 @@ import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
+import cors from "cors";
 
 const app = express();
 app.use(express.json());
@@ -28,6 +29,7 @@ dotenv.config();
 app.use(morgan("dev"));
 
 app.use(logger);
+app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
