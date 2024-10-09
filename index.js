@@ -20,6 +20,7 @@ import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
 import cors from "cors";
+import topicRouter from "./router/topic.router.js";
 
 const app = express();
 app.use(express.json());
@@ -34,6 +35,7 @@ app.use(cors());
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
+app.use("/topic", topicRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
 app.use("/course", courseRouter);

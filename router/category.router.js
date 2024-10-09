@@ -18,8 +18,6 @@ categoryRouter
   .route("/")
   .post(validation(createCategorySchema), categoryController.createCategory)
   .get(
-    protectedRoutes,
-    restrictedTo("instructor"),
     categoryController.getAllCategory
   );
 

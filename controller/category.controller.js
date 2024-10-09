@@ -29,7 +29,7 @@ const updateCategory = asyncHandler(async (req, res, next) => {
 const deleteCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.findByIdAndDelete(req.params.id);
   !result && res.status(404).json("Category not Found");
-  result && res.status(200).json({ message: "success", result: null });
+  result && res.status(204).json({ message: "success", result: null });
 });
 
 export {
