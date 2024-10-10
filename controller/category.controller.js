@@ -15,19 +15,10 @@ const getAllCategory = asyncHandler(async (req, res, next) => {
       populate: {
         path: 'topics', // Populate topics within each subcategory
         model: 'Topic', // Reference the Topic model
-      },
+        select: 'name' // Optional: Only include the 'name' field for topics
+      }
     });
 
-  // Modify the result to rename topics to popularTopics in each subcategory
-  result = result.map(category => {
-    category.subcategories = category.subcategories.map(subcategory => {
-      return {
-        ...subcategory.toObject(), // Convert Mongoose document to plain object
-        popularTopics: subcategory.topics, // Rename the topics field to popularTopics
-      };
-    });
-    return category;
-  });
 
   res.status(200).json({ message: 'success', result });
 });
