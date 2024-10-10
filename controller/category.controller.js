@@ -8,9 +8,21 @@ const createCategory = asyncHandler(async (req, res, next) => {
 });
 
 const getAllCategory = asyncHandler(async (req, res, next) => {
-  let result = await categoryModel.find();
-  res.status(200).json({ message: "success", result });
+  let result = await categoryModel
+    .find()
+    .populate({
+      path: 'subcategories', // Populate subcategories
+      populate: {
+        path: 'topics', // Populate topics within each subcategory
+        model: 'Topic', // Reference the Topic model
+        select: 'name' // Optional: Only include the 'name' field for topics
+      }
+    });
+
+
+  res.status(200).json({ message: 'success', result });
 });
+
 
 const getCategory = asyncHandler(async (req, res, next) => {
   let result = await categoryModel.findById(req.params.id);

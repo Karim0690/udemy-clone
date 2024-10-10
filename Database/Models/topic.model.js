@@ -12,10 +12,7 @@ const topicSchema =  new mongoose.Schema({
         type: String,
         lowercase: true,
       },
-      subcategory: {
-        type: mongoose.Types.ObjectId,
-        ref: "Subcategory",
-      },
+  
 
 
 
