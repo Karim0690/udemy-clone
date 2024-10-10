@@ -17,7 +17,18 @@ const getAllCategory = asyncHandler(async (req, res, next) => {
         model: 'Topic', // Reference the Topic model
       },
     });
-    
+
+  // Modify the result to rename topics to popularTopics in each subcategory
+  result = result.map(category => {
+    category.subcategories = category.subcategories.map(subcategory => {
+      return {
+        ...subcategory.toObject(), // Convert Mongoose document to plain object
+        popularTopics: subcategory.topics, // Rename the topics field to popularTopics
+      };
+    });
+    return category;
+  });
+
   res.status(200).json({ message: 'success', result });
 });
 
