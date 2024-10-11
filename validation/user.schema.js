@@ -47,10 +47,10 @@ export const validateUpdatingUser = Joi.object({
   headline: Joi.string().max(255).trim().allow("").optional(),
   biography: Joi.string().allow("").optional(),
   social: Joi.object({
-    website: Joi.string().uri().allow("").optional(),
-    facebook: Joi.string().uri().allow("").optional(),
-    linkedin: Joi.string().uri().allow("").optional(),
-    youtube: Joi.string().uri().allow("").optional(),
-    twitter: Joi.string().uri().allow("").optional(),
+    website: Joi.string().allow("").optional(),
+    facebook: Joi.string().allow("").optional(),
+    linkedin: Joi.string().allow("").optional(),
+    youtube: Joi.string().allow("").optional(),
+    twitter: Joi.string().allow("").optional(),
   }).optional(),
 });
