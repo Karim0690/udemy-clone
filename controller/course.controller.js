@@ -6,16 +6,16 @@ import { Featuers } from "../utils/featuers.js";
 //create____________________________________
 export const createCourse = asyncHandler(async (req, res) => {
   console.log(req.files);
-  const courseImage = req.files.courseImage
-    ? req.files.courseImage[0].filename
-    : null;
-  const promotionalVideo = req.files.promotionalVideo
-    ? req.files.promotionalVideo[0].filename
-    : null;
+  // const courseImage = req.files.courseImage
+  //   ? req.files.courseImage[0].filename
+  //   : null;
+  // const promotionalVideo = req.files.promotionalVideo
+  //   ? req.files.promotionalVideo[0].filename
+  //   : null;
   const newCourse = await cousreModel.create({
     ...req.body,
-    courseImage,
-    promotionalVideo,
+    // courseImage,
+    // promotionalVideo,
   });
   res.status(201).json({
     status: "success",

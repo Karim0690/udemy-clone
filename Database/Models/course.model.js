@@ -20,7 +20,7 @@ const courseSchema = new mongoose.Schema(
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Instructor",
+      ref: "User",
       required: true,
     },
     price: {
@@ -63,10 +63,6 @@ const courseSchema = new mongoose.Schema(
         ref: "Topic",
       }
     ],
-    relatedTopic:  {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Topic",
-    },
     language: {
       type: String,
       required: true,
@@ -111,4 +107,4 @@ courseSchema.path('topics').validate(function (topics) {
   return topics.length <= 4;
 }, 'A course can have a maximum of 4 topics.');
 
-export const cousreModel = mongoose.model("Course", courseSchema);
+export const  cousreModel = mongoose.model("Course", courseSchema);

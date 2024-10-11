@@ -18,8 +18,7 @@ courseRouter
   .route("/")
   .get(courseController.getCourses)
   .post(
-    protectedRoutes,
-    restrictedTo("instructor"),
+
     uploadManyFile(
       [
         { name: "courseImage", maxCount: 1 },

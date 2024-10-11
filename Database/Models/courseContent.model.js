@@ -5,8 +5,8 @@ import mongoose from 'mongoose';
 const courseContentSchema = new mongoose.Schema({
   title: { type: String, required: true },
   lectures: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lecture' }],
-  quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }],
-  assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }]
+  // quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }],
+  // assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }]
 }, { timestamps: true });
 
 const CourseContent = mongoose.model('CourseContent', courseContentSchema);
