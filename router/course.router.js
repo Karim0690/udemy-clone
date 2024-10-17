@@ -18,7 +18,8 @@ courseRouter
   .route("/")
   .get(courseController.getCourses)
   .post(
-
+    protectedRoutes,
+    restrictedTo("instructor"),
     uploadManyFile(
       [
         { name: "courseImage", maxCount: 1 },
@@ -29,21 +30,29 @@ courseRouter
     validation(createCourseSchema),
     courseController.createCourse
   );
-
-courseRouter
-  .route("/:id")
+  
+  
+  courseRouter
+  .route("/:title")
   .get(courseController.getCourse)
   .patch(
-    protectedRoutes,
-    restrictedTo("instructor"),
     validation(updateCourseSchema),
     courseController.updateCourse
   )
   .delete(
-    protectedRoutes,
-    restrictedTo("instructor", "admin"),
     courseController.deleteCourse
   );
+
+// courseRouter
+//   .route("/:id")
+//   .get(courseController.getCourse)
+//   .patch(
+//     validation(updateCourseSchema),
+//     courseController.updateCourse
+//   )
+//   .delete(
+//     courseController.deleteCourse
+//   );
 
 export default courseRouter;
 

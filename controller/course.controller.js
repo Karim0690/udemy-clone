@@ -64,17 +64,19 @@ export const getCourses = asyncHandler(async (req, res) => {
 
 //read course by id__________________________________
 export const getCourse = asyncHandler(async (req, res, next) => {
-  const course = await cousreModel.findById(req.params.id);
+  const course = await cousreModel.findOne({ title: req.params.title });
 
   if (!course) {
     return next(new AppError("Course not found", 404));
   }
+
   res.status(200).json({
     status: "success",
     data: {
       course,
     },
   });
+
 });
 
 //update________________________________________
