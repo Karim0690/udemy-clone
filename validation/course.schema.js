@@ -34,6 +34,7 @@ export const updateCourseSchema = Joi.object({
   id: Joi.string().hex().length(24).required(),
   title: Joi.string().min(5).max(100),
   subtitle: Joi.string().min(7),
+  instructor: Joi.string().hex().length(24).optional(),
   description: Joi.string().min(500),
   price: Joi.number(),
   instructionsLevel: Joi.string().valid("Beginner Level", "Intermediate Level", "Expert Level", "All Levels"),

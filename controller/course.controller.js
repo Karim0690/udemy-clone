@@ -64,7 +64,7 @@ export const getCourses = asyncHandler(async (req, res) => {
 
 //read course by id__________________________________
 export const getCourse = asyncHandler(async (req, res, next) => {
-  const course = await cousreModel.findOne({ title: req.params.title });
+  const course = await cousreModel.findOne({ title: req.params.title }).populate('instructor');;
 
   if (!course) {
     return next(new AppError("Course not found", 404));
