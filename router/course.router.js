@@ -18,15 +18,15 @@ courseRouter
   .route("/")
   .get(courseController.getCourses)
   .post(
-    protectedRoutes,
-    restrictedTo("instructor"),
-    uploadManyFile(
-      [
-        { name: "courseImage", maxCount: 1 },
-        { name: "promotionalVideo", maxCount: 1 },
-      ],
-      "Course"
-    ),
+    // protectedRoutes,
+    // restrictedTo("instructor"),
+    // uploadManyFile(
+    //   [
+    //     { name: "courseImage", maxCount: 1 },
+    //     { name: "promotionalVideo", maxCount: 1 },
+    //   ],
+    //   "Course"
+    // ),
     validation(createCourseSchema),
     courseController.createCourse
   );
@@ -34,7 +34,18 @@ courseRouter
   
   courseRouter
   .route("/:title")
-  .get(courseController.getCourse)
+  .get(courseController.getCourse);
+  // .patch(
+  //   validation(updateCourseSchema),
+  //   courseController.updateCourse
+  // )
+  // .delete(
+  //   courseController.deleteCourse
+  // );
+
+courseRouter
+  .route("/:id")
+//   .get(courseController.getCourse)
   .patch(
     validation(updateCourseSchema),
     courseController.updateCourse
@@ -42,17 +53,6 @@ courseRouter
   .delete(
     courseController.deleteCourse
   );
-
-// courseRouter
-//   .route("/:id")
-//   .get(courseController.getCourse)
-//   .patch(
-//     validation(updateCourseSchema),
-//     courseController.updateCourse
-//   )
-//   .delete(
-//     courseController.deleteCourse
-//   );
 
 export default courseRouter;
 

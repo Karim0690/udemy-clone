@@ -31,7 +31,6 @@ export const createCourseSchema = Joi.object({
 });
 
 export const updateCourseSchema = Joi.object({
-  id: Joi.string().hex().length(24).required(),
   title: Joi.string().min(5).max(100),
   subtitle: Joi.string().min(7),
   instructor: Joi.string().hex().length(24).optional(),
