@@ -7,22 +7,30 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minLength: [2, "too short name"],
     },
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-        minLength: [2, "too short name"],
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true,
-        minLength: [2, "too short name"],
-    },
+    firstName: { type: String, required: false, trim: true },
+    lastName: { type: String, required: false, trim: true },
     language: {
-
-
-
+        type: String,
+        required: false,
+        trim: true,
+        enum: [
+            "English (US)",
+            "Canada",
+            "France",
+            "Germany",
+            "Spain",
+            "Italy",
+            "UK",
+            "Netherlands",
+            "Australia",
+            "New Zealand",
+            "India",
+            "Brazil",
+            "Mexico",
+            "China",
+            "Russia",
+        ],
+        default: "English (US)",
     },
     email: {
         type: String,

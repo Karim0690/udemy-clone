@@ -19,17 +19,23 @@ import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
+import cors from "cors";
+import topicRouter from "./router/topic.router.js";
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 dotenv.config();
 app.use(morgan("dev"));
 
-app.use(express.json());
 app.use(logger);
+app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
+app.use("/topic", topicRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
 app.use("/course", courseRouter);
@@ -48,7 +54,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 dbconnection();
-const port = process.env.PORT || 3000;
+const port = 3000 ||process.env.PORT ;
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });

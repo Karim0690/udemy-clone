@@ -6,21 +6,29 @@ const courseSchema = new mongoose.Schema(
       required: true,
       minlength: 5,
       maxlength: 100,
+      unique: true,
     },
 
+    subtitle: {
+      type: String,
+      minlength: 7,
+    },
     description: {
       type: String,
       required: true,
-      minlength: 50,
-      maxlength: 500,
+      minlength: 500,
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Instructor",
+      ref: "User",
       required: true,
     },
     price: {
       type: Number,
+    },
+    instructionsLevel: {
+      type: String,
+      enum: ["Beginner Level", "Intermediate Level", "Expert Level", "All Levels"]
     },
     courseImage: {
       type: String,
@@ -30,6 +38,15 @@ const courseSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    bestSaller: {
+      type: Boolean,
+      default: false,
+    },
+    highestRated: {
+      type: Boolean,
+      default: false,
+    },
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -38,6 +55,16 @@ const courseSchema = new mongoose.Schema(
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Subcategory",
+      required: true,
+    },
+    topics: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Topic",
+      }
+    ],
+    language: {
+      type: String,
       required: true,
     },
     rating: {
@@ -61,12 +88,23 @@ const courseSchema = new mongoose.Schema(
     enrollments: {
       type: Number,
     },
+
     intendedLearns: [
       {
-        type: String,
+        willLearn: {
+          type: [String],
+        },
+        whoCourseFor: {
+          type: [String],
+        }
       },
     ],
   },
   { timestamps: true, collection: "Courses" }
 );
-export const cousreModel = mongoose.model("Course", courseSchema);
+
+courseSchema.path('topics').validate(function (topics) {
+  return topics.length <= 4;
+}, 'A course can have a maximum of 4 topics.');
+
+export const  cousreModel = mongoose.model("Course", courseSchema);

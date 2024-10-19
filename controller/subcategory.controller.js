@@ -9,7 +9,16 @@ const createSubcategory = asyncHandler(async (req, res) => {
 });
 
 const getAllSubcategory = asyncHandler(async (req, res) => {
-  let result = await subcategoryModel.find();
+  const { categoryId } = req.query; 
+
+  let query = {};
+  if (categoryId) {
+    query.category = categoryId; 
+  }
+
+  let result = await subcategoryModel.find(query); 
+  
+
   res.status(200).json({ message: "success", result });
 });
 
