@@ -17,16 +17,16 @@ const __dirname = dirname(__filename);
 //create____________________________________
 export const createCourse = asyncHandler(async (req, res) => {
   console.log(req.files);
-  const courseImage = req.files.courseImage
-    ? req.files.courseImage[0].filename
-    : null;
-  const promotionalVideo = req.files.promotionalVideo
-    ? req.files.promotionalVideo[0].filename
-    : null;
+  // const courseImage = req.files.courseImage
+  //   ? req.files.courseImage[0].filename
+  //   : null;
+  // const promotionalVideo = req.files.promotionalVideo
+  //   ? req.files.promotionalVideo[0].filename
+  //   : null;
   const newCourse = await cousreModel.create({
     ...req.body,
-    courseImage,
-    promotionalVideo,
+    // courseImage,
+    // promotionalVideo,
   });
   res.status(201).json({
     status: "success",
@@ -79,11 +79,36 @@ export const getCourse = asyncHandler(async (req, res, next) => {
     .findById(req.params.id)
     .populate("sections")
     .populate("topics")
-    .populate("relatedTopic");
+    .populate("relatedTopic")
+    .populate("instructor");
 
   if (!course) {
     return next(new AppError("Course not found", 404));
   }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      course,
+    },
+  });
+});
+
+//read course by title__________________________________
+export const getCourseByTitle = asyncHandler(async (req, res, next) => {
+  console.log(req.params.slug);
+  
+  const course = await cousreModel
+    .findOne({ slug: req.params.slug })
+    .populate("sections")
+    .populate("topics")
+    .populate("relatedTopic")
+    .populate("instructor");
+
+  if (!course) {
+    return next(new AppError("Course not found", 404));
+  }
+
   res.status(200).json({
     status: "success",
     data: {

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 const courseSchema = new mongoose.Schema(
   {
     title: {
@@ -7,6 +8,10 @@ const courseSchema = new mongoose.Schema(
       minlength: 5,
       maxlength: 100,
       unique: true,
+    },
+    slug: {
+      type: String,
+      lowercase: true,
     },
     subtitle: {
       type: String,
@@ -19,7 +24,7 @@ const courseSchema = new mongoose.Schema(
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Instructor",
+      ref: "User",
       required: true,
     },
     price: {
@@ -118,5 +123,20 @@ const courseSchema = new mongoose.Schema(
 courseSchema.path("topics").validate(function (topics) {
   return topics.length <= 4;
 }, "A course can have a maximum of 4 topics.");
+
+courseSchema.pre("save", function (next) {
+  if (this.isModified("title") || this.isNew) {
+    this.slug = slugify(this.title, { lower: true });
+  }
+  next();
+});
+
+courseSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.title) {
+    update.$set.slug = slugify(update.title, { lower: true });
+  }
+  next();
+});
 
 export const cousreModel = mongoose.model("Course", courseSchema);

@@ -54,7 +54,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 dbconnection();
-const port = process.env.PORT || 3000;
+const port = 3001 ||process.env.PORT ;
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });

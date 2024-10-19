@@ -30,16 +30,20 @@ courseRouter
     validation(createCourseSchema),
     courseController.createCourse
   );
-
-courseRouter
+  
+  
+  courseRouter
   .route("/:id")
   .get(courseController.getCourse)
   .patch(validation(updateCourseSchema), courseController.updateCourse)
   .delete(
-    protectedRoutes,
-    restrictedTo("instructor", "admin"),
     courseController.deleteCourse
   );
+
+  courseRouter
+  .route("/courseTitle/:slug")
+  .get(courseController.getCourseByTitle)
+
 
 courseRouter
   .route("/:id/course_sections")
