@@ -28,6 +28,8 @@ export const validateCreatingUser = Joi.object({
 });
 
 export const validateUpdatingUser = Joi.object({
+    photo: Joi.string().allow("").optional(),
+
     firstName: Joi.string().min(2).max(255).trim().optional(),
     lastName: Joi.string().min(2).max(255).trim().optional(),
     language: Joi.string()
