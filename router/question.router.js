@@ -16,9 +16,10 @@ import { validation } from "../middleware/validation.js";
 
 let router = express.Router();
 
+router.route("/").get(getAllQuestions);
+
 router
-  .route("/")
-  .get(getAllQuestions)
+  .route("/:quizId")
   .post(validation(validateCreatingQuestion), createQuestion);
 
 router

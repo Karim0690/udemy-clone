@@ -1,37 +1,17 @@
-import mongoose from 'mongoose';
-import Joi from 'joi';
+import mongoose from "mongoose";
 
-const lectureSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  content: { type: String },
-  duration: { type: Number }, // in minutes
-  resources: [{ type: String }] // e.g., URLs to videos or documents
-}, { timestamps: true });
+const lectureSchema = new mongoose.Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    content: { type: String, trim: true },
+    duration: { type: Number, min: 0 },
+    resource: { type: String },
+    type: { type: String, default: "Lecture" },
+    description: { type: String },
+  },
+  { timestamps: true }
+);
 
-const Lecture = mongoose.model('Lecture', lectureSchema);
+const Lecture = mongoose.model("Lecture", lectureSchema);
 
-// const validateCreatingLecture = (obj) => {
-//   const schema = Joi.object({
-//     title: Joi.string().required(),
-//     content: Joi.string(),
-//     duration: Joi.number().min(0),
-//     resources: Joi.array().items(Joi.string())
-//   });
-//   return schema.validate(obj);
-// };
-
-// const validateUpdateLecture = (obj) => {
-//   const schema = Joi.object({
-//     title: Joi.string(),
-//     content: Joi.string(),
-//     duration: Joi.number().min(0),
-//     resources: Joi.array().items(Joi.string())
-//   });
-//   return schema.validate(obj);
-// };
-
-export {
-  Lecture,
-  // validateCreatingLecture,
-  // validateUpdateLecture
-};
+export { Lecture };

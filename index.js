@@ -22,11 +22,11 @@ import couponRouter from "./router/coupon.router.js";
 import cors from "cors";
 import topicRouter from "./router/topic.router.js";
 
+dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-dotenv.config();
 app.use(morgan("dev"));
 
 app.use(logger);
@@ -44,7 +44,7 @@ app.use("/questions", question);
 app.use("/quizzes", quiz);
 app.use("/lectures", lecture);
 app.use("/assignments", assignment);
-app.use("/course-content", courseContent);
+app.use("/course-sections", courseContent);
 app.use("/cart", cartRouter);
 app.use("/coupon", couponRouter);
 app.all("*", (req, res, next) => {

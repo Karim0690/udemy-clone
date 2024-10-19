@@ -34,17 +34,37 @@ courseRouter
 courseRouter
   .route("/:id")
   .get(courseController.getCourse)
-  .patch(
-    protectedRoutes,
-    restrictedTo("instructor"),
-    validation(updateCourseSchema),
-    courseController.updateCourse
-  )
+  .patch(validation(updateCourseSchema), courseController.updateCourse)
   .delete(
     protectedRoutes,
     restrictedTo("instructor", "admin"),
     courseController.deleteCourse
   );
+
+courseRouter
+  .route("/:id/course_sections")
+  .get(courseController.findCourseContentByCourseId);
+
+courseRouter
+  .route("/:instructorId/instructor")
+  .get(courseController.findUserCourses);
+
+courseRouter.route("/:courseId/basics").patch(
+  courseController.uploadCourseBasics
+);
+
+// courseRouter
+//   .route("/imageUpload")
+//   .post(
+//     uploadFile("courseImage", "Course"),
+//     courseController.uploadCourseImage
+//   );
+// courseRouter
+//   .route("/videoUpload")
+//   .post(
+//     uploadFile("promotionalVideo", "Course"),
+//     courseController.uploadCourseVideo
+//   );
 
 export default courseRouter;
 

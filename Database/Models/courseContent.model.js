@@ -1,40 +1,32 @@
-import mongoose from 'mongoose';
-// import Joi from 'joi';
+import mongoose from "mongoose";
 
+const courseSectionsSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 80,
+      trim: true,
+    },
+    objective: { type: String, maxlength: 200, trim: true },
+    items: [
+      {
+        type: {
+          type: String,
+          enum: ["Lecture", "Quiz"],
+          required: true,
+        },
+        item: {
+          type: mongoose.Schema.Types.ObjectId,
+          refPath: "items.type",
+        },
+      },
+    ],
+  },
+  { timestamps: true }
+);
 
-const courseContentSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  lectures: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lecture' }],
-  quizzes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quiz' }],
-  assignments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Assignment' }]
-}, { timestamps: true });
+const CourseSections = mongoose.model("Sections", courseSectionsSchema);
 
-const CourseContent = mongoose.model('CourseContent', courseContentSchema);
-
-
-// const validateCreatingCourseContent = (obj) => {
-//   const schema = Joi.object({
-//     title: Joi.string().required(),
-//     lectures: Joi.array().items(Joi.string()), 
-//     quizzes: Joi.array().items(Joi.string()), 
-//     assignments: Joi.array().items(Joi.string())
-//   });
-//   return schema.validate(obj);
-// };
-
-
-// const validateUpdateCourseContent = (obj) => {
-//   const schema = Joi.object({
-//     title: Joi.string(),
-//     lectures: Joi.array().items(Joi.string()),
-//     quizzes: Joi.array().items(Joi.string()), 
-//     assignments: Joi.array().items(Joi.string())
-//   });
-//   return schema.validate(obj);
-// };
-
-export {
-  CourseContent,
-  // validateCreatingCourseContent,
-  // validateUpdateCourseContent
-};
+export { CourseSections };
