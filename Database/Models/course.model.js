@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import slugify from "slugify";
 const courseSchema = new mongoose.Schema(
   {
     title: {
@@ -8,7 +9,10 @@ const courseSchema = new mongoose.Schema(
       maxlength: 100,
       unique: true,
     },
-
+    slug: {
+      type: String,
+      lowercase: true,
+    },
     subtitle: {
       type: String,
       minlength: 7,
@@ -24,19 +28,24 @@ const courseSchema = new mongoose.Schema(
       required: true,
     },
     price: {
-      type: Number,
-    },
-    instructionsLevel: {
       type: String,
-      enum: ["Beginner Level", "Intermediate Level", "Expert Level", "All Levels"]
+    },
+    level: {
+      type: String,
+      enum: [
+        "Beginner Level",
+        "Intermediate Level",
+        "Expert Level",
+        "All Levels",
+      ],
     },
     courseImage: {
       type: String,
-      default: "",
+      default: null,
     },
     promotionalVideo: {
       type: String,
-      default: "",
+      default: null,
     },
     bestSaller: {
       type: Boolean,
@@ -46,7 +55,6 @@ const courseSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -61,10 +69,16 @@ const courseSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Topic",
-      }
+      },
     ],
+    relatedTopic: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Topic",
+      default: null,
+    },
     language: {
       type: String,
+      default: "English",
       required: true,
     },
     rating: {
@@ -79,32 +93,50 @@ const courseSchema = new mongoose.Schema(
         default: 0,
       },
     },
-    content: [
+    sections: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Content",
+        ref: "Sections",
       },
     ],
     enrollments: {
       type: Number,
     },
-
-    intendedLearns: [
-      {
-        willLearn: {
-          type: [String],
-        },
-        whoCourseFor: {
-          type: [String],
-        }
-      },
-    ],
+    learningObjective: {
+      type: [String],
+    },
+    requirements: { type: [String] },
+    courseFor: { type: [String] },
+    courseStructure: { type: Boolean, default: false },
+    setupAndTest: { type: Boolean, default: false },
+    filmAndEdite: { type: Boolean, default: false },
+    captions: { type: Boolean, default: false },
+    accessibility: { type: Boolean, default: false },
+    promotions: { type: Boolean, default: false },
+    progress: { type: Number, default: 0 },
+    welcomeMessage: { type: String, minlength: 3, maxlength: 1000 },
+    congratesMessage: { type: String, minlength: 3, maxlength: 1000 },
   },
   { timestamps: true, collection: "Courses" }
 );
 
-courseSchema.path('topics').validate(function (topics) {
+courseSchema.path("topics").validate(function (topics) {
   return topics.length <= 4;
-}, 'A course can have a maximum of 4 topics.');
+}, "A course can have a maximum of 4 topics.");
 
-export const  cousreModel = mongoose.model("Course", courseSchema);
+courseSchema.pre("save", function (next) {
+  if (this.isModified("title") || this.isNew) {
+    this.slug = slugify(this.title, { lower: true });
+  }
+  next();
+});
+
+courseSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+  if (update.title) {
+    update.$set.slug = slugify(update.title, { lower: true });
+  }
+  next();
+});
+
+export const cousreModel = mongoose.model("Course", courseSchema);

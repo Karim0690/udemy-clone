@@ -10,21 +10,23 @@ import {
   updateCategorySchema,
 } from "../validation/category.schema.js";
 
-import {validation} from "../middleware/validation.js";
+import { validation } from "../middleware/validation.js";
 
 const categoryRouter = express.Router();
 
 categoryRouter
   .route("/")
   .post(validation(createCategorySchema), categoryController.createCategory)
-  .get(
-    categoryController.getAllCategory
-  );
+  .get(categoryController.getAllCategory);
 
 categoryRouter
   .route("/:id")
   .get(categoryController.getCategory)
   .patch(validation(updateCategorySchema), categoryController.updateCategory)
   .delete(categoryController.deleteCategory);
+
+categoryRouter
+  .route("/:categoryid/subcategories")
+  .get(categoryController.getCategorySubCategories);
 
 export default categoryRouter;

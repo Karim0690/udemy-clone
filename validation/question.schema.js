@@ -1,9 +1,18 @@
 import Joi from "joi";
 
 export const validateCreatingQuestion = Joi.object({
-  questionText: Joi.string().required(),
-  options: Joi.array().items(Joi.string()).required(),
-  correctAnswer: Joi.string().required(),
+  quizId: Joi.string().hex().length(24).required(),
+  question: Joi.string().required(),
+  answers: Joi.array()
+    .items(
+      Joi.object({
+        answer: Joi.string().required(),
+        explanation: Joi.string().allow("").optional(),
+        isCorrect: Joi.boolean().default(false),
+      })
+    )
+    .min(1)
+    .required(),
 });
 
 export const validateUpdateQuestion = Joi.object({

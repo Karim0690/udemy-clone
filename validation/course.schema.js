@@ -41,21 +41,29 @@ export const updateCourseSchema = Joi.object({
   promotionalVideo: Joi.string().allow('').optional(), // Allow empty string
   bestSaller: Joi.boolean(),
   highestRated: Joi.boolean(),
+
   category: Joi.string().hex().length(24),
   subcategory: Joi.string().hex().length(24),
-  topics: Joi.array().items(Joi.string().hex().length(24)).max(4),
-  relatedTopic: Joi.string().hex().length(24),
-  language: Joi.string(),
-  rating: Joi.object({
-    average: Joi.number().min(0).max(5),
-    count: Joi.number(),
-  }),
-  content: Joi.array().items(Joi.string().hex().length(24)),
-  enrollments: Joi.number(),
-  intendedLearns: Joi.array().items(
-    Joi.object({
-      willLearn: Joi.array().items(Joi.string()),
-      whoCourseFor: Joi.array().items(Joi.string()),
-    })
-  ),
+  sections: Joi.array()
+    .items(Joi.string().hex().length(24).required())
+    .optional(),
+  learningObjective: Joi.array().items(Joi.string()).optional(),
+  requirements: Joi.array().items(Joi.string()).optional(),
+  courseFor: Joi.array().items(Joi.string()).optional(),
+  language: Joi.string().allow(""),
+  topics: Joi.array().items(Joi.string().hex().length(24)).optional(),
+  courseImage: Joi.string().allow("").optional(),
+  promotionalVideo: Joi.string().allow("").optional(),
+  courseStructure: Joi.boolean().optional(),
+  setupAndTest: Joi.boolean().optional(),
+  filmAndEdite: Joi.boolean().optional(),
+  captions: Joi.boolean().optional(),
+  accessibility: Joi.boolean().optional(),
+  promotions: Joi.boolean().optional(),
+  progress: Joi.number().min(0).max(100).optional(),
+  level: Joi.string()
+    .valid("Beginner Level", "Intermediate Level", "Expert Level", "All Levels")
+    .optional(),
+  welcomeMessage: Joi.string().min(3).max(1000).optional(),
+  congratesMessage: Joi.string().min(3).max(1000).optional(),
 });
