@@ -39,6 +39,9 @@ const userSchema = new mongoose.Schema({
         minLength: 1,
         unique: [true, "email must be unique"],
     },
+    photo: {
+        type: String,
+    },
     password: {
         type: String,
         require: true,
