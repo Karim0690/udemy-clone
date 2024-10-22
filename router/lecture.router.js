@@ -21,9 +21,10 @@ router
   .get(getAllLectures)
   .post(validation(validateCreatingLecture), createLecture);
 
+router.route("/:id").get(getLectureById);
+
 router
-  .route("/:id")
-  .get(getLectureById)
+  .route("/:id/course/:courseId")
   .put(validation(validateUpdateLecture), updateLecture)
   .delete(deleteLecture);
 

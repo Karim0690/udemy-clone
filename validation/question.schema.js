@@ -13,10 +13,14 @@ export const validateCreatingQuestion = Joi.object({
     )
     .min(1)
     .required(),
+  relatedLecture: Joi.string().hex().length(24).optional(),
 });
 
 export const validateUpdateQuestion = Joi.object({
+  qid: Joi.string().hex().length(24).required(),
+  id: Joi.string().hex().length(24).required(),
   questionText: Joi.string(),
   options: Joi.array().items(Joi.string()),
   correctAnswer: Joi.string(),
+  relatedLecture: Joi.string().hex().length(24).optional(),
 });
