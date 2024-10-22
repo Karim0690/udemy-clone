@@ -33,25 +33,41 @@ courseRouter
   
   
   courseRouter
-  .route("/:title")
+  .route("/:id")
   .get(courseController.getCourse)
-  .patch(
-    validation(updateCourseSchema),
-    courseController.updateCourse
-  )
+  .patch(validation(updateCourseSchema), courseController.updateCourse)
   .delete(
     courseController.deleteCourse
   );
 
+  courseRouter
+  .route("/courseTitle/:slug")
+  .get(courseController.getCourseByTitle)
+
+
+courseRouter
+  .route("/:id/course_sections")
+  .get(courseController.findCourseContentByCourseId);
+
+courseRouter
+  .route("/:instructorId/instructor")
+  .get(courseController.findUserCourses);
+
+courseRouter.route("/:courseId/basics").patch(
+  courseController.uploadCourseBasics
+);
+
 // courseRouter
-//   .route("/:id")
-//   .get(courseController.getCourse)
-//   .patch(
-//     validation(updateCourseSchema),
-//     courseController.updateCourse
-//   )
-//   .delete(
-//     courseController.deleteCourse
+//   .route("/imageUpload")
+//   .post(
+//     uploadFile("courseImage", "Course"),
+//     courseController.uploadCourseImage
+//   );
+// courseRouter
+//   .route("/videoUpload")
+//   .post(
+//     uploadFile("promotionalVideo", "Course"),
+//     courseController.uploadCourseVideo
 //   );
 
 export default courseRouter;

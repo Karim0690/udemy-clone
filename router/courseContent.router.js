@@ -6,6 +6,10 @@ import {
   getAllCourseContents,
   getCourseContentById,
   updateCourseContent,
+  addSectionToCourse,
+  addLectureToSection,
+  deleteSectionItem,
+  addQuizToSection,
 } from "../controller/courseContent.controller.js";
 import {
   CreatingCourseContent,
@@ -27,4 +31,8 @@ router
   .put(validation(UpdatingCourseContent), updateCourseContent)
   .delete(deleteCourseContent);
 
+router.post("/:courseId", addSectionToCourse);
+router.post("/:sectionId/lecture", addLectureToSection);
+router.post("/:sectionId/quiz", addQuizToSection);
+router.delete("/:sectionId/items/:itemId", deleteSectionItem);
 export default router;

@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import { Question } from "../Database/Models/question.model.js";
 import AppError from "../utils/appError.js";
+import { Quiz } from "../Database/Models/quiz.model.js";
 
 /**
  * @desc Create a new question
@@ -8,14 +9,17 @@ import AppError from "../utils/appError.js";
  * @method POST
  * @access public
  */
-export const createQuestion = asyncHandler(async (req, res) => {
-  // const { error } = validateCreatingQuestion(req.body);
-  // if (error) {
-  //   return res.status(400).json({ error: error.details[0].message });
-  // }
-
+export const createQuestion = asyncHandler(async (req, res, next) => {
+  const { quizId } = req.params;
   const question = new Question(req.body);
   await question.save();
+  const quiz = await Quiz.findByIdAndUpdate(
+    quizId,
+    { $push: { questions: question._id } },
+    { new: true }
+  );
+
+  if (!quiz) return next(new AppError("Quiz not found", 404));
   res.status(201).json({ message: "success", data: question });
 });
 
