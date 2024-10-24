@@ -7,7 +7,7 @@ authRouter.post('/signup', signup);
 authRouter.post('/signin', signin);
 authRouter.post('/forget-password', forgetPassword);
 authRouter.post('/reset-password', resetPassword);
-authRouter.post('/changeForgetPassword', change_forget_password);
+authRouter.patch('/changeForgetPassword', change_forget_password);
 
 
 export default authRouter;
