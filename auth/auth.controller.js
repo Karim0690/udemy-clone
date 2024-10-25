@@ -44,8 +44,6 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
   // Store user ID in session
   req.session.userId = user._id;
 
-  console.log("Session after setting userId:", req.session); // Debugging log
-
   // Generate and store reset code
   const resetCode = randomCode;
   user.resetCode = resetCode;
@@ -65,7 +63,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
   // Fetch user from session
   const user = await userModel.findById(req.session.userId);
   if (!user || resetPasswordCode !== user.resetCode) {
-    return next(new AppError(`Code to reset password doesn't match${user} ${resetPasswordCode}`, 401));
+    return next(new AppError(`Code to reset password doesn't match`, 401));
   }
 
   return res.status(200).json({ message: 'Code to reset password has matched' });
