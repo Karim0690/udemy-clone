@@ -70,16 +70,12 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 });
 
 export const change_forget_password = catchAsync(async (req, res, next) => {
-  const { password, confirm_password, resetPasswordCode } = req.body;
+  const { password, confirm_password } = req.body;
 
   // Fetch user from session
   const user = await userModel.findById(req.session.userId);
   if (!user) {
     return next(new AppError("User not found.", 404));
-  }
-
-  if (resetPasswordCode !== user.resetCode) {
-    return next(new AppError("Reset code is incorrect.", 401));
   }
 
   if (password !== confirm_password) {
