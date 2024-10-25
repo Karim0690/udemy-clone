@@ -41,61 +41,60 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("We could not find a user with the given email", 404));
   }
 
-  // Generate a random reset code
+  // Store user ID in session
+  req.session.userId = user._id;
+
+  // Generate and store reset code
   const resetCode = randomCode;
-  user.resetCode = resetCode; // Store the reset code in the user document
-  await user.save(); // Save the user with the new reset code
+  user.resetCode = resetCode;
+  await user.save();
 
-  console.log('Generated Reset Code:', resetCode);
-
-  // Prepare and send the email with the reset code
+  // Send email
   mail_option.to = [email];
   mail_option.html = mail_option.html.replace('${randomCode}', resetCode);
-
   await sendMail(transporter, mail_option);
 
   return res.status(200).json({ message: 'Reset code sent to your email.' });
 });
 
 export const resetPassword = catchAsync(async (req, res, next) => {
-  const { resetPasswordCode, email } = req.body;
+  const { resetPasswordCode } = req.body;
 
-  const user = await userModel.findOne({ email });
+  // Fetch user from session
+  const user = await userModel.findById(req.session.userId);
   if (!user || resetPasswordCode !== user.resetCode) {
-    return next(new AppError(`Code to reset password doesn't match ${user} ${resetPasswordCode} `, 401));
+    return next(new AppError("Code to reset password doesn't match", 401));
   }
 
   return res.status(200).json({ message: 'Code to reset password has matched' });
 });
 
 export const change_forget_password = catchAsync(async (req, res, next) => {
-  const { email, password, confirm_password, resetPasswordCode } = req.body;
+  const { password, confirm_password, resetPasswordCode } = req.body;
 
-  // Check if the reset code matches the one stored in the user's document
-  const user = await userModel.findOne({ email });
+  // Fetch user from session
+  const user = await userModel.findById(req.session.userId);
   if (!user) {
-    return next(new AppError("We could not find a user with the given email", 404));
+    return next(new AppError("User not found.", 404));
   }
 
   if (resetPasswordCode !== user.resetCode) {
     return next(new AppError("Reset code is incorrect.", 401));
   }
 
-  // Check if passwords match
   if (password !== confirm_password) {
     return next(new AppError("Passwords do not match.", 400));
   }
 
-  // Update user's password (it will be hashed in pre-save middleware)
   user.password = password;
   await user.save();
 
-  // Reset the reset code after a successful password change
-  user.resetCode = undefined; // Clear the reset code
+  // Clear the reset code after successful password change
+  user.resetCode = undefined;
   await user.save();
+
+  // Clear the session
+  req.session.destroy();
 
   return res.status(200).json({ message: 'Password has been updated successfully.' });
 });
-
-
-
