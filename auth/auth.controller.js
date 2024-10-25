@@ -46,6 +46,8 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
   user.resetCode = resetCode; // Store the reset code in the user document
   await user.save(); // Save the user with the new reset code
 
+  console.log('Generated Reset Code:', resetCode);
+
   // Prepare and send the email with the reset code
   mail_option.to = [email];
   mail_option.html = mail_option.html.replace('${randomCode}', resetCode);
