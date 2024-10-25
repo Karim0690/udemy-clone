@@ -20,8 +20,17 @@ import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
 import session from 'express-session';
-
+import cors from 'cors';
 const app = express();
+
+
+app.use(cors({
+  origin: '*', // Allows all origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+  credentials: true // Allow credentials (optional)
+}));
+
 
 app.use(session({
   secret: process.env.SESSION_SECRET, // Use a secret string
