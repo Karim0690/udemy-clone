@@ -1,6 +1,7 @@
 import { subcategoryModel } from "../Database/Models/subcategory.model.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
+import { Featuers } from "../utils/featuers.js";
 
 const createSubcategory = asyncHandler(async (req, res) => {
   let result = new subcategoryModel(req.body);
@@ -9,16 +10,21 @@ const createSubcategory = asyncHandler(async (req, res) => {
 });
 
 const getAllSubcategory = asyncHandler(async (req, res) => {
-  const { categoryId } = req.query; 
+  // const { categoryId } = req.query;
 
-  let query = {};
-  if (categoryId) {
-    query.category = categoryId; 
-  }
-
-  let result = await subcategoryModel.find(query); 
-  
-
+  // let query = {};
+  // if (categoryId) {
+  //   query.category = categoryId;
+  // }
+  const features = new Featuers(
+    subcategoryModel.find().populate("category"),
+    req.query
+  )
+    .filter()
+    .sort()
+    .fields()
+    .search();
+  let result = await features.mongooseQuery;
   res.status(200).json({ message: "success", result });
 });
 

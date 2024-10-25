@@ -39,7 +39,10 @@ export class Featuers {
   search() {
     if (this.queryString.keyword) {
       this.mongooseQuery.find({
-        $or: [{ title: { $regex: this.queryString.keyword, $options: "i" } }],
+        $or: [
+          { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { name: { $regex: this.queryString.keyword, $options: "i" } },
+        ],
       });
     }
     return this;
