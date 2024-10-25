@@ -19,23 +19,28 @@ import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
-import cors from "cors";
-import topicRouter from "./router/topic.router.js";
+import session from 'express-session';
 
-dotenv.config();
 const app = express();
+
+app.use(session({
+  secret: process.env.SESSION_SECRET, // Use a secret string
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+dotenv.config();
 app.use(morgan("dev"));
 
 app.use(logger);
-app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
-app.use("/topic", topicRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
 app.use("/course", courseRouter);
@@ -44,7 +49,7 @@ app.use("/questions", question);
 app.use("/quizzes", quiz);
 app.use("/lectures", lecture);
 app.use("/assignments", assignment);
-app.use("/course-sections", courseContent);
+app.use("/course-content", courseContent);
 app.use("/cart", cartRouter);
 app.use("/coupon", couponRouter);
 app.all("*", (req, res, next) => {
@@ -54,7 +59,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 dbconnection();
-const port = 3001 ||process.env.PORT ;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });
