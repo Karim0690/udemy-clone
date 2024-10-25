@@ -62,7 +62,7 @@ export const resetPassword = catchAsync(async (req, res, next) => {
 
   const user = await userModel.findOne({ email });
   if (!user || resetPasswordCode !== user.resetCode) {
-    return next(new AppError(`Code to reset password doesn't match${email}${resetPasswordCode}`, 401));
+    return next(new AppError(`Code to reset password doesn't match ${user} ${resetPasswordCode} `, 401));
   }
 
   return res.status(200).json({ message: 'Code to reset password has matched' });
