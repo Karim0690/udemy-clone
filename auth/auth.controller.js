@@ -41,19 +41,12 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
     return next(new AppError("We could not find a user with the given email", 404));
   }
 
-  // Check if the user already has a reset code
-  let resetCode;
-  if (user.resetCode) {
-    resetCode = user.resetCode; // Use the existing reset code
-  } else {
-    // Generate a new reset code if none exists
-    resetCode = generateRandomCode();
-    user.resetCode = resetCode; // Store the new reset code in the user document
-  }
-  
-  await user.save(); // Save the user with the reset code
+  // Generate a random reset code
+  const resetCode = randomCode;
+  user.resetCode = resetCode; // Store the reset code in the user document
+  await user.save(); // Save the user with the new reset code
 
-  console.log('Reset Code:', resetCode);
+  console.log('Generated Reset Code:', resetCode);
 
   // Prepare and send the email with the reset code
   mail_option.to = [email];
@@ -63,6 +56,7 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({ message: 'Reset code sent to your email.' });
 });
+
 export const resetPassword = catchAsync(async (req, res, next) => {
   const { resetPasswordCode, email } = req.body;
 
