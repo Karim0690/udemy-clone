@@ -44,6 +44,8 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
   // Store user ID in session
   req.session.userId = user._id;
 
+  console.log("Session after setting userId:", req.session); // Debugging log
+
   // Generate and store reset code
   const resetCode = randomCode;
   user.resetCode = resetCode;
