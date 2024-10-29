@@ -2,8 +2,9 @@ import Order from "../Database/Models/order.model.js";
 import cartModel from "../Database/Models/cart.model.js";
 import AppError from "../utils/appError.js";
 import asyncHandler from "express-async-handler";
+import { Featuers } from "../utils/featuers.js";
 
-export const createOrder = asyncHandler(async (req, res,next) => {
+export const createOrder = asyncHandler(async (req, res, next) => {
   const cart = await cartModel.findById(req.params.cartId);
   if (!cart) return next(new AppError("Cart not found", 404));
 
@@ -55,6 +56,29 @@ export const getOrdersByUser = asyncHandler(async (req, res, next) => {
     return next(new AppError("No orders found for this user", 404));
   }
 
+  res.status(200).json({
+    message: "success",
+    data: orders,
+  });
+});
+export const getAllOrders = asyncHandler(async (req, res, next) => {
+  const features = new Featuers(
+    Order.find()
+      .populate("user", "_id name email role")
+      .populate({
+        path: "cartItems",
+        populate: {
+          path: "course",
+          select: "_id title description instructor price",
+        },
+      }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .fields()
+    .search();
+  const orders = await features.mongooseQuery;
   res.status(200).json({
     message: "success",
     data: orders,

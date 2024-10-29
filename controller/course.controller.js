@@ -89,10 +89,24 @@ export const getCourseByTitle = asyncHandler(async (req, res, next) => {
 
   const course = await cousreModel
     .findOne({ slug: req.params.slug })
-    .populate("sections")
+    .populate({
+      path: "sections",
+      populate: {
+        path: "items.item",
+      },
+    })
     .populate("topics")
     .populate("relatedTopic")
-    .populate("instructor");
+    .populate("instructor")
+    .populate("category", "name")
+    .populate({
+      path: "subcategory",
+      select: "name topics",
+      populate: {
+        path: "topics",
+        select: "name",
+      },
+    });
 
   if (!course) {
     return next(new AppError("Course not found", 404));

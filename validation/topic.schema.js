@@ -7,4 +7,5 @@ export const createTopicSchema = Joi.object({
 export const updateTopicSchema = Joi.object({
   id: Joi.string().hex().length(24).required(),
   name: Joi.string().min(2).max(25),
+  subcategory: Joi.string().hex().length(24).required(),
 });
