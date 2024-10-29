@@ -21,6 +21,7 @@ import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
 import session from "express-session";
 import cors from "cors";
+import topicRouter from "./router/topic.router.js";
 const app = express();
 
 app.use(cors());
@@ -64,6 +65,7 @@ app.use("/assignments", assignment);
 app.use("/course-content", courseContent);
 app.use("/cart", cartRouter);
 app.use("/coupon", couponRouter);
+app.use("/topic", topicRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
