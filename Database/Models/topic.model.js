@@ -5,14 +5,15 @@ const topicSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      unique: [true, "Name is requierd"],
+      unique: [true, "Name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too Short brand name"],
+      minLength: [2, "Too short brand name"],
     },
     slug: {
       type: String,
       lowercase: true,
+      required: true,
     },
     subcategory: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,8 +33,12 @@ topicSchema.pre("save", function (next) {
 topicSchema.pre("findOneAndUpdate", function (next) {
   const update = this.getUpdate();
   if (update.name) {
+    if (!update.$set) {
+      update.$set = {};
+    }
     update.$set.slug = slugify(update.name, { lower: true });
   }
   next();
 });
+
 export default mongoose.model("Topic", topicSchema);

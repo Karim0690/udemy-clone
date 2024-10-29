@@ -18,15 +18,15 @@ courseRouter
   .route("/")
   .get(courseController.getCourses)
   .post(
-    protectedRoutes,
-    restrictedTo("instructor"),
-    uploadManyFile(
-      [
-        { name: "courseImage", maxCount: 1 },
-        { name: "promotionalVideo", maxCount: 1 },
-      ],
-      "Course"
-    ),
+    // protectedRoutes,
+    // restrictedTo("instructor"),
+    // uploadManyFile(
+    //   [
+    //     { name: "courseImage", maxCount: 1 },
+    //     { name: "promotionalVideo", maxCount: 1 },
+    //   ],
+    //   "Course"
+    // ),
     validation(createCourseSchema),
     courseController.createCourse
   );
@@ -39,6 +39,7 @@ courseRouter
   .delete(
     courseController.deleteCourse
   );
+
 
   courseRouter
   .route("/courseTitle/:slug")

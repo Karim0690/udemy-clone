@@ -7,11 +7,17 @@ export const createCourseSchema = Joi.object({
 });
 
 export const updateCourseSchema = Joi.object({
-  id: Joi.string().hex().length(24).required(),
-  title: Joi.string().min(3).max(60).optional(),
-  subtitle: Joi.string().max(120).allow("").optional(),
-  description: Joi.string().min(50).max(500).allow("").optional(),
-  price: Joi.string().min(0).optional(),
+  title: Joi.string().min(5).max(100),
+  subtitle: Joi.string().min(7),
+  instructor: Joi.string().hex().length(24).optional(),
+  description: Joi.string().min(500),
+  price: Joi.number(),
+  instructionsLevel: Joi.string().valid("Beginner Level", "Intermediate Level", "Expert Level", "All Levels"),
+  courseImage: Joi.string().allow('').optional(), // Allow empty string
+  promotionalVideo: Joi.string().allow('').optional(), // Allow empty string
+  bestSaller: Joi.boolean(),
+  highestRated: Joi.boolean(),
+
   category: Joi.string().hex().length(24),
   subcategory: Joi.string().hex().length(24),
   sections: Joi.array(),

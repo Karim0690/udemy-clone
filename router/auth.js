@@ -1,9 +1,13 @@
 import express from 'express';
-import { signin, signup } from '../auth/auth.controller.js';
+import { signin, signup, forgetPassword, resetPassword, change_forget_password } from '../auth/auth.controller.js';
 
 const authRouter = express.Router();
 
 authRouter.post('/signup', signup);
 authRouter.post('/signin', signin);
+authRouter.post('/forget-password', forgetPassword);
+authRouter.post('/reset-password', resetPassword);
+authRouter.patch('/changeForgetPassword', change_forget_password);
+
 
 export default authRouter;
