@@ -35,7 +35,7 @@ export const updateQuestion = asyncHandler(async (req, res, next) => {
   //   return res.status(400).json({ error: error.details[0].message });
   // }
 
-  const question = await Question.findByIdAndUpdate(req.params.id, req.body, {
+  const question = await Question.findByIdAndUpdate(req.params.qid, req.body, {
     new: true,
   });
   if (!question) return next(new AppError("Question not found", 404));

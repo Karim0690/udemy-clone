@@ -7,9 +7,9 @@ export class Featuers {
   pagination() {
     let page = this.queryString.page * 1 || 1;
     if (this.queryString.page * 1 <= 0) page = 1;
-    let skip = (page - 1) * 3;
+    let skip = (page - 1) * 20;
     this.page = page;
-    this.mongooseQuery.skip(skip).limit(3);
+    this.mongooseQuery.skip(skip).limit(20);
     return this;
   }
 
@@ -39,7 +39,10 @@ export class Featuers {
   search() {
     if (this.queryString.keyword) {
       this.mongooseQuery.find({
-        $or: [{ title: { $regex: this.queryString.keyword, $options: "i" } }],
+        $or: [
+          { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { name: { $regex: this.queryString.keyword, $options: "i" } },
+        ],
       });
     }
     return this;

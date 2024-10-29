@@ -27,8 +27,8 @@ router
 
 router
   .route("/:id")
+  .put( updateCourseContent)
   .get(getCourseContentById)
-  .put(validation(UpdatingCourseContent), updateCourseContent)
   .delete(deleteCourseContent);
 
 router.post("/:courseId", addSectionToCourse);

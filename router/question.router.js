@@ -22,10 +22,7 @@ router
   .route("/:quizId")
   .post(validation(validateCreatingQuestion), createQuestion);
 
-router
-  .route("/:id")
-  .get(getQuestionById)
-  .put(validation(validateUpdateQuestion), updateQuestion)
-  .delete(deleteQuestion);
+router.route("/:id").get(getQuestionById).delete(deleteQuestion);
 
+router.route("/:qid").put(updateQuestion);
 export default router;
