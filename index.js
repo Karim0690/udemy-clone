@@ -21,16 +21,16 @@ import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
 import session from "express-session";
 import cors from "cors";
+import topicRouter from "./router/topic.router.js";
 const app = express();
 
-app.use(
-  cors({
-    origin: "http://localhost:3001",
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
-    credentials: true, // Allow credentials
-  })
-);
+app.use(cors());
+// {
+//   origin: 'http://localhost:3001',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+//   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+//   credentials: true // Allow credentials
+// }
 
 app.use(
   session({
@@ -64,6 +64,7 @@ app.use("/lectures", lecture);
 app.use("/assignments", assignment);
 app.use("/course-content", courseContent);
 app.use("/cart", cartRouter);
+app.use("/topic", topicRouter);
 app.use("/coupon", couponRouter);
 app.use("/topic", topicRouter);
 

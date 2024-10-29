@@ -1,6 +1,9 @@
 import { categoryModel } from "../Database/Models/category.model.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
+import { Featuers } from "../utils/featuers.js";
+import topicModel from "../Database/Models/topic.model.js";
+
 
 const createCategory = asyncHandler(async (req, res, next) => {
   let result = new categoryModel(req.body);
@@ -9,16 +12,26 @@ const createCategory = asyncHandler(async (req, res, next) => {
 });
 
 const getAllCategory = asyncHandler(async (req, res, next) => {
-  let result = await categoryModel.find().populate({
-    path: "subcategories", // Populate subcategories
-    populate: {
-      path: "topics", // Populate topics within each subcategory
-      model: "Topic", // Reference the Topic model
-      select: "name", // Optional: Only include the 'name' field for topics
-    },
-  });
+  const features = new Featuers(
+    categoryModel.find().populate({
+      path: "subcategories",
+      populate: {
+        path: "topics",
+      },
+    }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .fields()
+    .search();
 
-  res.status(200).json({ message: "success", result });
+  const result = await features.mongooseQuery;
+
+  res.status(200).json({
+    message: "success",
+    result,
+  });
 });
 
 const getCategory = asyncHandler(async (req, res, next) => {

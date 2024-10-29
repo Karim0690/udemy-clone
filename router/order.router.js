@@ -3,6 +3,7 @@ import {
   createOrder,
   getOrderById,
   getOrdersByUser,
+  getAllOrders,
 } from "../controller/order.controller.js";
 import { validateCreatingOrder } from "../validation/order.schema.js";
 import { validation } from "../middleware/validation.js";
@@ -18,5 +19,6 @@ OrderRouter.post(
 );
 OrderRouter.get("/:id", getOrderById);
 OrderRouter.get("/user/:userId", getOrdersByUser);
+OrderRouter.get("/", getAllOrders);
 
 export default OrderRouter;

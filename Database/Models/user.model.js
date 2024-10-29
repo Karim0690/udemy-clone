@@ -1,20 +1,48 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
       trim: true,
-      minLength: [2, 'Too short name'],
+      minLength: [2, "too short name"],
+    },
+    firstName: { type: String, required: false, trim: true },
+    lastName: { type: String, required: false, trim: true },
+    language: {
+      type: String,
+      required: false,
+      trim: true,
+      enum: [
+        "English (US)",
+        "Canada",
+        "France",
+        "Germany",
+        "Spain",
+        "Italy",
+        "UK",
+        "Netherlands",
+        "Australia",
+        "New Zealand",
+        "India",
+        "Brazil",
+        "Mexico",
+        "China",
+        "Russia",
+      ],
+      default: "English (US)",
     },
     email: {
       type: String,
       trim: true,
-      required: [true, 'Email is required'],
+      required: [true, "email is required"],
       minLength: 1,
-      unique: [true, 'Email must be unique'],
+      unique: [true, "email must be unique"],
+    },
+    photo: {
+      type: String,
+      default: "",
     },
     password: {
       type: String,
@@ -25,8 +53,8 @@ const userSchema = new mongoose.Schema(
     profilePic: String,
     role: {
       type: [String],
-      enum: ['student', 'instructor', 'admin'],
-      default: ['student'],
+      enum: ["student", "instructor", "admin"],
+      default: ["student"],
     },
     isActive: {
       type: Boolean,
@@ -35,19 +63,19 @@ const userSchema = new mongoose.Schema(
     enrolledCourses: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'course',
+        ref: "course",
       },
     ],
     wishlist: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'course',
+        ref: "course",
       },
     ],
     favorite: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'course',
+        ref: "course",
       },
     ],
     headline: {
@@ -69,15 +97,15 @@ const userSchema = new mongoose.Schema(
       default: null, // Set default value to null
     },
   },
-  { timestamps: true, collection: 'User' }
+  { timestamps: true, collection: "User" }
 );
 
-userSchema.pre('save', async function (next) {
-  if (this.isModified('password')) {
+userSchema.pre("save", async function (next) {
+  if (this.isModified("password")) {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
   }
   next();
 });
 
-export const userModel = mongoose.model('User', userSchema);
+export const userModel = mongoose.model("User", userSchema);

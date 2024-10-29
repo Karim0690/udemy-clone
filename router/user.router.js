@@ -19,7 +19,9 @@ userRouter
   .route("/:id")
   .get(userController.getUser)
   .put(validation(validateUpdatingUser), userController.updateUser)
-  .delete(userController.deleteUser)
-  .patch(userController.changeUserPassword);
-
+  .delete(userController.deleteUser);
+// .patch(userController.changeUserPassword);
+userRouter.put("/change-password/:id", userController.changeUserPassword);
+userRouter.post("/change-email/:id", userController.updateEmail);
+userRouter.post("/close-account/:id", userController.closeAccount);
 export default userRouter;
