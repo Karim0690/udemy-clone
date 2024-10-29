@@ -64,8 +64,8 @@ app.use("/lectures", lecture);
 app.use("/assignments", assignment);
 app.use("/course-content", courseContent);
 app.use("/cart", cartRouter);
-app.use("/coupon", couponRouter);
 app.use("/topic", topicRouter);
+app.use("/coupon", couponRouter);
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
