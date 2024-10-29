@@ -19,27 +19,29 @@ import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
-import session from 'express-session';
-import cors from 'cors';
+import session from "express-session";
+import cors from "cors";
 const app = express();
 
-app.use(cors({
-  origin: 'http://localhost:3001', 
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
-  credentials: true // Allow credentials
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // Allowed methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+    credentials: true, // Allow credentials
+  })
+);
 
-
-
-app.use(session({
-  secret: process.env.SESSION_SECRET,
-  resave: false,
-  saveUninitialized: true,
-  cookie: {
-    secure: false, // Change to true in production with HTTPS
-  }
-}));
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, // Change to true in production with HTTPS
+    },
+  })
+);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -63,6 +65,8 @@ app.use("/assignments", assignment);
 app.use("/course-content", courseContent);
 app.use("/cart", cartRouter);
 app.use("/coupon", couponRouter);
+app.use("/topic", topicRouter);
+
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
