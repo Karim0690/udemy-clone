@@ -18,15 +18,15 @@ courseRouter
   .route("/")
   .get(courseController.getCourses)
   .post(
-    protectedRoutes,
-    restrictedTo("instructor"),
-    uploadManyFile(
-      [
-        { name: "courseImage", maxCount: 1 },
-        { name: "promotionalVideo", maxCount: 1 },
-      ],
-      "Course"
-    ),
+    // protectedRoutes,
+    // restrictedTo("instructor"),
+    // uploadManyFile(
+    //   [
+    //     { name: "courseImage", maxCount: 1 },
+    //     { name: "promotionalVideo", maxCount: 1 },
+    //   ],
+    //   "Course"
+    // ),
     validation(createCourseSchema),
     courseController.createCourse
   );
@@ -40,6 +40,10 @@ courseRouter
     courseController.deleteCourse
   );
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
   courseRouter
   .route("/courseTitle/:slug")
   .get(courseController.getCourseByTitle)

@@ -11,6 +11,13 @@ const questionSchema = new mongoose.Schema(
           explanation: { type: String },
         },
       ],
+<<<<<<< HEAD
+=======
+      relatedLecture: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Lecture",
+      },
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
     },
   ],
   { timestamps: true }

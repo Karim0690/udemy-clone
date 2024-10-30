@@ -2,10 +2,11 @@ import Joi from "joi";
 
 export const validateCreatingUser = Joi.object({
     name: Joi.string().min(2).max(255).trim().required(),
+    firstName:Joi.string().trim().allow("").optional(),
+    lastName:Joi.string().trim().allow("").optional(),
     email: Joi.string().email().trim().required(),
     password: Joi.string().min(8).required(),
-    passwordChangedAt: Joi.date().optional(),
-    profilePic: Joi.string().uri().allow("").optional(),
+    photo: Joi.string().uri().allow("").optional(),
     role: Joi.array()
         .items(Joi.string().valid("student", "instructor", "admin"))
         .default(["student"]),

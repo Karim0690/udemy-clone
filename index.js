@@ -19,23 +19,40 @@ import assignment from "./router/assignment.router.js";
 import courseContent from "./router/courseContent.router.js";
 import cartRouter from "./router/cart.router.js";
 import couponRouter from "./router/coupon.router.js";
+import session from "express-session";
 import cors from "cors";
 import topicRouter from "./router/topic.router.js";
-
-dotenv.config();
 const app = express();
+
+app.use(cors());
+// {
+//   origin: 'http://localhost:3001',
+//   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed methods
+//   allowedHeaders: ['Content-Type', 'Authorization'], // Allowed headers
+//   credentials: true // Allow credentials
+// }
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: false, // Change to true in production with HTTPS
+    },
+  })
+);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 
 app.use(logger);
-app.use(cors());
 
 app.use("/user", userRouter);
 app.use("/category", categoryRouter);
 app.use("/subcategory", subcategoryRouter);
-app.use("/topic", topicRouter);
 app.use("/auth", authRouter);
 app.use("/orders", OrderRouter);
 app.use("/course", courseRouter);
@@ -46,7 +63,10 @@ app.use("/lectures", lecture);
 app.use("/assignments", assignment);
 app.use("/course-sections", courseContent);
 app.use("/cart", cartRouter);
+app.use("/topic", topicRouter);
 app.use("/coupon", couponRouter);
+app.use("/topic", topicRouter);
+
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
@@ -54,7 +74,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 dbconnection();
-const port = 3001 ||process.env.PORT ;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });

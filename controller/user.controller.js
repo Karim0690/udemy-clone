@@ -41,14 +41,11 @@ const deleteUser = asyncHandler(async (req, res, next) => {
   user && res.status(200).json({ message: "success" });
 });
 
-// const changeUserPassword = asyncHandler(async(req, res, next) => {
-//     const { id } = req.params;
-//     req.body.passwordChangedAt = Date.now();
-//     let result = await userModel.findByIdAndUpdate(id, req.body, { new: true });
-//     !user && next(new AppError("User not Found", 404));
-//     result && res.status(200).json({ message: "success", result });
-// });
+const changeUserPassword = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { oldPassword, newPassword, confirmPassword } = req.body;
 
+<<<<<<< HEAD
 const verifyPassword = (userPassword, oldPassword) => {
   //   const user = await userModel.findById(id);
   //   if (!user) {
@@ -94,6 +91,54 @@ const changeUserPassword = asyncHandler(async (req, res, next) => {
     await user.save();
     res.status(200).json({ message: "Password updated successfully!" });
   }
+=======
+  if (newPassword !== confirmPassword) {
+    return next(
+      new AppError("New password and confirm password do not match", 400)
+    );
+  }
+
+  const user = await userModel.findById(id);
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    return next(new AppError("Old password is incorrect", 400));
+  }
+  user.password = newPassword;
+  user.passwordChangedAt = Date.now();
+  await user.save();
+  res.status(200).json({ message: "success" });
+});
+
+const updateEmail = asyncHandler(async (req, res, next) => {
+  let user = await userModel.findById(req.params.id);
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  const isMatch = await bcrypt.compare(req.body.password, user.password);
+  if (!isMatch) {
+    return next(new AppError("Incorrect Password", 400));
+  }
+  user.email = req.body.email;
+  await user.save();
+  res.status(200).json({ message: "success" });
+});
+
+const closeAccount = asyncHandler(async (req, res, next) => {
+  let user = await userModel.findById(req.params.id);
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  const isMatch = await bcrypt.compare(req.body.password, user.password);
+  if (!isMatch) {
+    return next(new AppError("Incorrect Password", 400));
+  }
+  user.isActive = false;
+  await user.save();
+  res.status(200).json({ message: "success" });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 export {
@@ -103,4 +148,9 @@ export {
   updateUser,
   deleteUser,
   changeUserPassword,
+<<<<<<< HEAD
+=======
+  updateEmail,
+  closeAccount,
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 };

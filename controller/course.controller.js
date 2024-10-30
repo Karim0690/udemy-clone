@@ -2,15 +2,23 @@ import { cousreModel } from "../Database/Models/course.model.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
 import { Featuers } from "../utils/featuers.js";
+<<<<<<< HEAD
 // import {
 //   cloudinaryDeleteImage,
 //   cloudinaryUploadImage,
 // } from "../utils/cloudinary.js";
+=======
+import {
+  cloudinaryDeleteImage,
+  cloudinaryUploadImage,
+} from "../utils/cloudinary.js";
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import fs from "fs";
 
+<<<<<<< HEAD
 const __filename = fileURLToPath(
     import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,6 +43,20 @@ export const createCourse = asyncHandler(async(req, res) => {
             course: newCourse,
         },
     });
+=======
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+//create____________________________________
+export const createCourse = asyncHandler(async (req, res) => {
+  const newCourse = await cousreModel.create(req.body);
+  res.status(201).json({
+    message: "success",
+    data: {
+      course: newCourse,
+    },
+  });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 //read Courses_________________________________________
@@ -75,6 +97,7 @@ export const getCourses = asyncHandler(async(req, res) => {
 });
 
 //read course by id__________________________________
+<<<<<<< HEAD
 export const getCourse = asyncHandler(async(req, res, next) => {
     const course = await cousreModel
         .findById(req.params.id)
@@ -82,11 +105,23 @@ export const getCourse = asyncHandler(async(req, res, next) => {
         .populate("topics")
         .populate("relatedTopic")
         .populate("instructor");
+=======
+export const getCourse = asyncHandler(async (req, res, next) => {
+  const course = await cousreModel
+    .findById(req.params.id)
+    .populate("sections")
+    .populate("topics")
+    .populate("relatedTopic")
+    .populate("instructor")
+    .populate("category")
+    .populate("subcategory"); 
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 
     if (!course) {
         return next(new AppError("Course not found", 404));
     }
 
+<<<<<<< HEAD
     res.status(200).json({
         status: "success",
         data: {
@@ -116,6 +151,51 @@ export const getCourseByTitle = asyncHandler(async(req, res, next) => {
             course,
         },
     });
+=======
+  res.status(200).json({
+    status: "success",
+    data: {
+      course,
+    },
+  });
+});
+
+//read course by title__________________________________
+export const getCourseByTitle = asyncHandler(async (req, res, next) => {
+  console.log(req.params.slug);
+
+  const course = await cousreModel
+    .findOne({ slug: req.params.slug })
+    .populate({
+      path: "sections",
+      populate: {
+        path: "items.item",
+      },
+    })
+    .populate("topics")
+    .populate("relatedTopic")
+    .populate("instructor")
+    .populate("category", "name")
+    .populate({
+      path: "subcategory",
+      select: "name topics",
+      populate: {
+        path: "topics",
+        select: "name",
+      },
+    });
+
+  if (!course) {
+    return next(new AppError("Course not found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      course,
+    },
+  });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 //update________________________________________
@@ -150,6 +230,7 @@ export const deleteCourse = asyncHandler(async(req, res, next) => {
 
 //_______________________________________________
 export const findCourseContentByCourseId = asyncHandler(
+<<<<<<< HEAD
     async(req, res, next) => {
         const courseContent = await cousreModel
             .find({
@@ -192,10 +273,55 @@ export const findUserCourses = asyncHandler(async(req, res, next) => {
         message: "success",
         data: courses,
     });
+=======
+  async (req, res, next) => {
+    const courseContent = await cousreModel
+      .find({
+        _id: req.params.id,
+      })
+      .select("sections")
+      .populate({
+        path: "sections",
+        populate: {
+          path: "items.item",
+        },
+      });
+
+    if (!courseContent)
+      return next(new AppError("Course content not found", 404));
+    res.status(200).json(courseContent);
+  }
+);
+//_______________________________________________
+
+export const findUserCourses = asyncHandler(async (req, res, next) => {
+  const { instructorId } = req.params;
+
+  let featuers = new Featuers(
+    cousreModel.find({ instructor: instructorId }),
+    req.query
+  )
+    .filter()
+    .sort()
+    .fields()
+    .search();
+
+  const courses = await featuers.mongooseQuery;
+
+  if (!courses || courses.length === 0) {
+    return next(new AppError("Courses not found", 404));
+  }
+
+  res.status(200).json({
+    message: "success",
+    data: courses,
+  });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 //Upload Course Basics_______________________________________________
 
+<<<<<<< HEAD
 export const uploadCourseBasics = asyncHandler(async(req, res, next) => {
     const { courseId } = req.params;
 
@@ -210,6 +336,22 @@ export const uploadCourseBasics = asyncHandler(async(req, res, next) => {
         message: "success",
         data: basics,
     });
+=======
+export const uploadCourseBasics = asyncHandler(async (req, res, next) => {
+  const { courseId } = req.params;
+
+  const course = await cousreModel.findById(courseId);
+  if (!course) return next(new AppError("course not found", 404));
+
+  const basics = await cousreModel.findByIdAndUpdate(course._id, req.body, {
+    new: true,
+  });
+
+  res.status(200).json({
+    message: "success",
+    data: basics,
+  });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 // //upload course image_______________________________________________
@@ -242,4 +384,8 @@ export const uploadCourseBasics = asyncHandler(async(req, res, next) => {
 //     message: "success",
 //     data: result,
 //   });
+<<<<<<< HEAD
 // });
+=======
+// });
+>>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
