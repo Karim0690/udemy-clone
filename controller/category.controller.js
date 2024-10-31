@@ -1,12 +1,8 @@
 import { categoryModel } from "../Database/Models/category.model.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
-<<<<<<< HEAD
-=======
 import { Featuers } from "../utils/featuers.js";
 import topicModel from "../Database/Models/topic.model.js";
-
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 
 const createCategory = asyncHandler(async (req, res, next) => {
   let result = new categoryModel(req.body);
@@ -14,26 +10,46 @@ const createCategory = asyncHandler(async (req, res, next) => {
   res.status(201).json({ message: "success", result });
 });
 
-const getAllCategory = asyncHandler(async (req, res, next) => {
-<<<<<<< HEAD
-  let result = await categoryModel.find().populate({
-    path: "subcategories", // Populate subcategories
-    populate: {
-      path: "topics", // Populate topics within each subcategory
-      model: "Topic", // Reference the Topic model
-      select: "name", // Optional: Only include the 'name' field for topics
-    },
-  });
+// const getAllCategory = asyncHandler(async (req, res, next) => {
+//   const features = new Featuers(
+//     categoryModel.find().populate({
+//       path: "subcategories",
+//       populate: {
+//         path: "topics",
+//       },
+//     }),
+//     req.query
+//   )
+//     .filter()
+//     .sort()
+//     .fields()
+//     .search();
 
-  res.status(200).json({ message: "success", result });
-=======
+//   const result = await features.mongooseQuery;
+
+//   res.status(200).json({
+//     message: "success",
+//     result,
+//   });
+// });
+
+const getAllCategory = asyncHandler(async (req, res, next) => {
+  const keyword = req.query.keyword || "";
+
   const features = new Featuers(
-    categoryModel.find().populate({
-      path: "subcategories",
-      populate: {
-        path: "topics",
-      },
-    }),
+    categoryModel
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { nameAr: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .populate({
+        path: "subcategories",
+        populate: {
+          path: "topics",
+        },
+      }),
     req.query
   )
     .filter()
@@ -47,7 +63,6 @@ const getAllCategory = asyncHandler(async (req, res, next) => {
     message: "success",
     result,
   });
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 const getCategory = asyncHandler(async (req, res, next) => {
@@ -57,6 +72,7 @@ const getCategory = asyncHandler(async (req, res, next) => {
 });
 
 const updateCategory = asyncHandler(async (req, res, next) => {
+  console.log("Request Body:", req.body);
   let result = await categoryModel.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });

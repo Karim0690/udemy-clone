@@ -10,6 +10,13 @@ const topicSchema = new mongoose.Schema(
       required: true,
       minLength: [2, "Too short brand name"],
     },
+    nameAr: {
+      type: String,
+      unique: [true, "Name is required"],
+      trim: true,
+      required: true,
+      minLength: [2, "Too short brand name"],
+    },
     slug: {
       type: String,
       lowercase: true,

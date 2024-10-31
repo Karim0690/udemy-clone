@@ -29,14 +29,6 @@ export const createCourseContent = asyncHandler(async (req, res) => {
  * @access public
  */
 export const updateCourseContent = asyncHandler(async (req, res, next) => {
-<<<<<<< HEAD
-  //   const { error } = validateUpdateCourseContent(req.body);
-  //   if (error) {
-  //     return res.status(400).json({ error: error.details[0].message });
-  //   }
-
-=======
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
   const courseContent = await CourseSections.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -101,11 +93,7 @@ export const addSectionToCourse = asyncHandler(async (req, res, next) => {
     { new: true }
   );
   res.status(201).json({
-<<<<<<< HEAD
-    message: "Section added and course updated successfully",
-=======
     message: "success",
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
     section: courseSection,
   });
 });
@@ -131,11 +119,7 @@ export const addLectureToSection = asyncHandler(async (req, res, next) => {
   }
 
   res.status(201).json({
-<<<<<<< HEAD
-    message: "Lecture added to section successfully",
-=======
     message: "success",
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
     lecture,
   });
 });
@@ -160,11 +144,7 @@ export const addQuizToSection = asyncHandler(async (req, res, next) => {
   }
 
   res.status(201).json({
-<<<<<<< HEAD
-    message: "Lecture added to section successfully",
-=======
     message: "success",
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
     quiz,
   });
 });
@@ -184,10 +164,6 @@ export const deleteSectionItem = asyncHandler(async (req, res, next) => {
     return next(new AppError("Section not found", 404));
   }
   res.status(200).json({
-<<<<<<< HEAD
-    message: "Item deleted from section successfully",
-=======
     message: "success",
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
   });
 });

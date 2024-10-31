@@ -10,6 +10,13 @@ const subcategorySchema = new mongoose.Schema(
       required: true,
       minLength: [2, "too Short brand name"],
     },
+    nameAr: {
+      type: String,
+      unique: [true, "Name is requierd"],
+      trim: true,
+      required: true,
+      minLength: [2, "too Short brand name"],
+    },
     slug: {
       type: String,
       lowercase: true,

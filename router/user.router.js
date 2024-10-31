@@ -22,9 +22,6 @@ userRouter
   .delete(userController.deleteUser);
 // .patch(userController.changeUserPassword);
 userRouter.put("/change-password/:id", userController.changeUserPassword);
-<<<<<<< HEAD
-=======
 userRouter.post("/change-email/:id", userController.updateEmail);
 userRouter.post("/close-account/:id", userController.closeAccount);
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 export default userRouter;

@@ -45,53 +45,6 @@ const changeUserPassword = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
   const { oldPassword, newPassword, confirmPassword } = req.body;
 
-<<<<<<< HEAD
-const verifyPassword = (userPassword, oldPassword) => {
-  //   const user = await userModel.findById(id);
-  //   if (!user) {
-  //     throw new AppError("User not found", 404);
-  //   }
-
-  if (!oldPassword) {
-    throw new AppError("Input password is required", 400);
-  }
-
-  const isMatch = bcrypt.compare(oldPassword, userPassword);
-  if (!isMatch) {
-    return false;
-  }
-  return true;
-};
-const verifyUserPassword = async (req, res, next) => {
-  const { password } = req.body;
-  await verifyPassword(id, password);
-  if (!verifyPassword) return next(new AppError("Password is incorrect", 400));
-  return res.status(200).json({ message: "success" });
-};
-
-const changeUserPassword = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  const { oldPassword, newPassword, confirmPassword } = req.body;
-  const user = await userModel.findById(id);
-
-  if (newPassword !== confirmPassword) {
-    return next(
-      new AppError("New password and confirm password do not match", 400)
-    );
-  }
-
-  const isMatch = await bcrypt.compare(oldPassword, user.password);
-
-  if (!isMatch) {
-    return next(new AppError("Password is incorrect", 400));
-  } else {
-    // const salt = await bcrypt.genSalt(10);
-    user.password = newPassword;
-    user.passwordChangedAt = Date.now();
-    await user.save();
-    res.status(200).json({ message: "Password updated successfully!" });
-  }
-=======
   if (newPassword !== confirmPassword) {
     return next(
       new AppError("New password and confirm password do not match", 400)
@@ -138,7 +91,6 @@ const closeAccount = asyncHandler(async (req, res, next) => {
   user.isActive = false;
   await user.save();
   res.status(200).json({ message: "success" });
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 });
 
 export {
@@ -148,9 +100,6 @@ export {
   updateUser,
   deleteUser,
   changeUserPassword,
-<<<<<<< HEAD
-=======
   updateEmail,
   closeAccount,
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
 };

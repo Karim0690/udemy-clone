@@ -114,10 +114,7 @@ const courseSchema = new mongoose.Schema(
     progress: { type: Number, default: 0 },
     welcomeMessage: { type: String, minlength: 3, maxlength: 1000 },
     congratesMessage: { type: String, minlength: 3, maxlength: 1000 },
-<<<<<<< HEAD
-=======
     duration: { type: Number, default: 0 },
->>>>>>> d41aa58ab691162f6c5101af72e518e10d17ca59
   },
   { timestamps: true, collection: "Courses" }
 );
