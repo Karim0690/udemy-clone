@@ -47,7 +47,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-dotenv.config();
 app.use(morgan("dev"));
 
 app.use(logger);
@@ -63,7 +62,7 @@ app.use("/questions", question);
 app.use("/quizzes", quiz);
 app.use("/lectures", lecture);
 app.use("/assignments", assignment);
-app.use("/course-content", courseContent);
+app.use("/course-sections", courseContent);
 app.use("/cart", cartRouter);
 app.use("/topic", topicRouter);
 app.use("/coupon", couponRouter);

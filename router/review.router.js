@@ -16,10 +16,7 @@ import { validation } from "../middleware/validation.js";
 
 let router = express.Router();
 
-router
-  .route("/")
-  .get(getAllReview)
-  .post(validation(validateCreatingReview), createReview);
+router.route("/").get(getAllReview).post(createReview);
 
 router
   .route("/:id")

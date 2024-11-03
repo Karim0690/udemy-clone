@@ -8,23 +8,30 @@ const createSubcategory = asyncHandler(async (req, res) => {
   await result.save();
   res.status(201).json({ message: "success", result });
 });
-
 const getAllSubcategory = asyncHandler(async (req, res) => {
-  // const { categoryId } = req.query;
+  const keyword = req.query.keyword || "";
 
-  // let query = {};
-  // if (categoryId) {
-  //   query.category = categoryId;
-  // }
   const features = new Featuers(
-    subcategoryModel.find().populate("category"),
+    subcategoryModel
+      .find({
+        $or: [
+          { name: { $regex: keyword, $options: "i" } },
+          { nameAr: { $regex: keyword, $options: "i" } },
+        ],
+      })
+      .populate("category"),
     req.query
   )
     .filter()
     .sort()
-    .fields()
-    .search();
+    .fields();
+
   let result = await features.mongooseQuery;
+
+  if (!result || result.length === 0) {
+    return res.status(404).json({ message: "No subcategories found" });
+  }
+
   res.status(200).json({ message: "success", result });
 });
 
@@ -34,7 +41,9 @@ const getSubcategory = asyncHandler(async (req, res, next) => {
   result && res.status(200).json({ message: "success", result });
 });
 
-const updateSubcategory = asyncHandler(async (req, res) => {
+const updateSubcategory = asyncHandler(async (req, res, next) => {
+  console.log(req.body);
+
   let result = await subcategoryModel.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -42,8 +51,12 @@ const updateSubcategory = asyncHandler(async (req, res) => {
       new: true,
     }
   );
-  !result && next(new AppError("Category not Found", 404));
-  result && res.status(200).json({ message: "success", result });
+
+  if (!result) {
+    return next(new AppError("Subcategory not Found", 404));
+  }
+
+  res.status(200).json({ message: "success", result });
 });
 
 const deleteSubcategory = asyncHandler(async (req, res) => {

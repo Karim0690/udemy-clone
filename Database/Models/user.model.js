@@ -8,31 +8,6 @@ const userSchema = new mongoose.Schema(
       trim: true,
       minLength: [2, "too short name"],
     },
-    firstName: { type: String, required: false, trim: true },
-    lastName: { type: String, required: false, trim: true },
-    language: {
-      type: String,
-      required: false,
-      trim: true,
-      enum: [
-        "English (US)",
-        "Canada",
-        "France",
-        "Germany",
-        "Spain",
-        "Italy",
-        "UK",
-        "Netherlands",
-        "Australia",
-        "New Zealand",
-        "India",
-        "Brazil",
-        "Mexico",
-        "China",
-        "Russia",
-      ],
-      default: "English (US)",
-    },
     email: {
       type: String,
       trim: true,
@@ -40,14 +15,10 @@ const userSchema = new mongoose.Schema(
       minLength: 1,
       unique: [true, "email must be unique"],
     },
-    photo: {
-      type: String,
-      default: "",
-    },
     password: {
       type: String,
-      required: true,
-      minLength: [8, "Password can't be less than 8 characters"],
+      require: true,
+      minLength: [8, "password can't be less than 8 characters"],
     },
     passwordChangedAt: Date,
     profilePic: String,
@@ -92,19 +63,13 @@ const userSchema = new mongoose.Schema(
       youtube: String,
       twitter: String,
     },
-    resetCode: {
-      type: String,
-      default: null, // Set default value to null
-    },
   },
   { timestamps: true, collection: "User" }
 );
 
 userSchema.pre("save", async function (next) {
-  if (this.isModified("password")) {
-    const salt = await bcrypt.genSalt(10);
-    this.password = await bcrypt.hash(this.password, salt);
-  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
   next();
 });
 

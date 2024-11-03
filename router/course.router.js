@@ -14,37 +14,27 @@ import { uploadFile, uploadManyFile } from "../middleware/fileUpload.js";
 
 const courseRouter = express.Router();
 
+courseRouter.route("/").get(courseController.getCourses).post(
+  // protectedRoutes,
+  // restrictedTo("instructor"),
+  // uploadManyFile(
+  //   [
+  //     { name: "courseImage", maxCount: 1 },
+  //     { name: "promotionalVideo", maxCount: 1 },
+  //   ],
+  //   "Course"
+  // ),
+  validation(createCourseSchema),
+  courseController.createCourse
+);
+
 courseRouter
-  .route("/")
-  .get(courseController.getCourses)
-  .post(
-    // protectedRoutes,
-    // restrictedTo("instructor"),
-    // uploadManyFile(
-    //   [
-    //     { name: "courseImage", maxCount: 1 },
-    //     { name: "promotionalVideo", maxCount: 1 },
-    //   ],
-    //   "Course"
-    // ),
-    validation(createCourseSchema),
-    courseController.createCourse
-  );
-  
-  
-  courseRouter
   .route("/:id")
   .get(courseController.getCourse)
   .patch(validation(updateCourseSchema), courseController.updateCourse)
-  .delete(
-    courseController.deleteCourse
-  );
+  .delete(courseController.deleteCourse);
 
-
-  courseRouter
-  .route("/courseTitle/:slug")
-  .get(courseController.getCourseByTitle)
-
+courseRouter.route("/courseTitle/:slug").get(courseController.getCourseByTitle);
 
 courseRouter
   .route("/:id/course_sections")
@@ -54,9 +44,9 @@ courseRouter
   .route("/:instructorId/instructor")
   .get(courseController.findUserCourses);
 
-courseRouter.route("/:courseId/basics").patch(
-  courseController.uploadCourseBasics
-);
+courseRouter
+  .route("/:courseId/basics")
+  .patch(courseController.uploadCourseBasics);
 
 // courseRouter
 //   .route("/imageUpload")

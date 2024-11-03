@@ -71,7 +71,7 @@ export const getCourse = asyncHandler(async (req, res, next) => {
     .populate("relatedTopic")
     .populate("instructor")
     .populate("category")
-    .populate("subcategory"); 
+    .populate("subcategory");
 
   if (!course) {
     return next(new AppError("Course not found", 404));

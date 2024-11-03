@@ -10,6 +10,13 @@ const categorySchema = new mongoose.Schema(
       required: true,
       minLength: [2, "too Short category name"],
     },
+    nameAr: {
+      type: String,
+      unique: [true, "Name is requierd"],
+      trim: true,
+      required: true,
+      minLength: [2, "too Short category name in Arabic"],
+    },
     slug: {
       type: String,
       unique: true,

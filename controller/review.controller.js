@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
 import {
   reviewModel,
-//   validateCreatingReview,
-//   validateUpdateReview,
+  //   validateCreatingReview,
+  //   validateUpdateReview,
 } from "../Database/Models/review.model.js";
 import AppError from "../utils/appError.js";
 
@@ -54,17 +54,20 @@ const getReviewById = asyncHandler(async (req, res) => {
  * @access protected (user)
  */
 const createReview = asyncHandler(async (req, res) => {
-  //   const { error } = validateCreatingReview(req.body);
-  //   if (error) {
-  //     return res.status(400).json({ message: error.details[0].message });
-  //   }
-
+  console.log("Received request body:", req.body);
+  const { course, user, rating, comment } = req.body;
+  if (!course || !user || !rating) {
+    return res
+      .status(400)
+      .json({ message: "Course, user, and rating are required." });
+  }
   let review = new reviewModel({
-    course: req.body.course,
-    user: req.body.user,
-    rating: req.body.rating,
-    comment: req.body.comment,
+    course,
+    user,
+    rating,
+    comment,
   });
+
   const result = await review.save();
 
   res.status(201).json({ message: "success", data: result });
@@ -103,7 +106,7 @@ const updateReviewById = asyncHandler(async (req, res) => {
  * @access protected (user)
  */
 const deleteReviewById = asyncHandler(async (req, res, next) => {
-  const review = await reviewModel.find(req.params.id);
+  const review = await reviewModel.findById(req.params.id);
   if (review) {
     await reviewModel.findByIdAndDelete(req.params.id);
     res
