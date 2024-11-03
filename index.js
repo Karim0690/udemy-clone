@@ -22,6 +22,7 @@ import couponRouter from "./router/coupon.router.js";
 import session from "express-session";
 import cors from "cors";
 import topicRouter from "./router/topic.router.js";
+import paymentRouter from "./router/payment.route.js";
 const app = express();
 
 app.use(cors());
@@ -67,6 +68,7 @@ app.use("/cart", cartRouter);
 app.use("/topic", topicRouter);
 app.use("/coupon", couponRouter);
 app.use("/topic", topicRouter);
+app.use("/paypal", paymentRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
@@ -75,7 +77,7 @@ app.all("*", (req, res, next) => {
 app.use(globalErrorHandler);
 
 dbconnection();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`server is running on port ${port}`);
 });

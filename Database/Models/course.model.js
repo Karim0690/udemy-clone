@@ -9,6 +9,13 @@ const courseSchema = new mongoose.Schema(
       maxlength: 100,
       unique: true,
     },
+    title_Ar: {
+      type: String,
+      required: true,
+      minlength: 5,
+      maxlength: 100,
+      unique: true,
+    },
     slug: {
       type: String,
       lowercase: true,
@@ -17,7 +24,15 @@ const courseSchema = new mongoose.Schema(
       type: String,
       minlength: 7,
     },
+    subtitle_Ar: {
+      type: String,
+      minlength: 7,
+    },
     description: {
+      type: String,
+      maxlength: 500,
+    },
+    description_Ar: {
       type: String,
       maxlength: 500,
     },
@@ -105,6 +120,11 @@ const courseSchema = new mongoose.Schema(
     },
     requirements: { type: [String] },
     courseFor: { type: [String] },
+    learningObjective_Ar: {
+      type: [String],
+    },
+    requirements_Ar: { type: [String] },
+    courseFor_Ar: { type: [String] },
     courseStructure: { type: Boolean, default: false },
     setupAndTest: { type: Boolean, default: false },
     filmAndEdite: { type: Boolean, default: false },

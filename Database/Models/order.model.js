@@ -13,12 +13,11 @@ const orderSchema = new mongoose.Schema(
     ],
     country: {
       type: String,
-      required: true,
+      default: "Egypt",
     },
     paymentMethod: {
       type: String,
-      required: true,
-      enum: ["Credit/Debit Card", "PayPal"],
+      default: "Paypal",
     },
     summary: {
       originalPrice: {
@@ -37,6 +36,5 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true, collection: "Order" }
 );
-
 
 export default mongoose.model("Order", orderSchema);

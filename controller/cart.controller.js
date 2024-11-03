@@ -92,8 +92,35 @@ const applyCoupon = asyncHandler(async (req, res, next) => {
 const getLoggedUserCart = asyncHandler(async (req, res) => {
   let cart = await cartModel
     .findOne({ user: req.user._id })
-    .populate("items.course", "_id title price instructor");
-  res.status(201).json({ message: "success", cart });
+    .populate("items.course", "_id title price instructor")
+    .populate({
+      path: "items",
+      populate: {
+        path: "course",
+        select: "title price instructor rating courseImage",
+
+        populate: {
+          path: "instructor",
+          select: "name",
+        },
+      },
+    });
+  res.status(200).json({ message: "success", cart });
 });
 
-export { addCourseToCart, removCourseFromCart, applyCoupon, getLoggedUserCart };
+const removeCoupon = asyncHandler(async (req, res) => {
+  let cart = await cartModel.findOne({ user: req.user._id });
+  cart.discount = 0;
+  cart.totalPriceAfterDiscount = 0;
+  calcTotalPrice(cart);
+  await cart.save();
+  res.status(200).json({ message: "success", cart });
+});
+
+export {
+  addCourseToCart,
+  removCourseFromCart,
+  applyCoupon,
+  getLoggedUserCart,
+  removeCoupon,
+};

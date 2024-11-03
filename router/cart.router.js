@@ -7,7 +7,8 @@ cartRouter
   .route("/")
   .post(protectedRoutes, cartController.addCourseToCart)
   .put(protectedRoutes, cartController.applyCoupon)
-  .get(protectedRoutes, cartController.getLoggedUserCart);
+  .get(protectedRoutes, cartController.getLoggedUserCart)
+  .patch(protectedRoutes, cartController.removeCoupon);
 
 cartRouter
   .route("/:id")

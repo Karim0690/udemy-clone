@@ -3,6 +3,7 @@ import cartModel from "../Database/Models/cart.model.js";
 import AppError from "../utils/appError.js";
 import asyncHandler from "express-async-handler";
 import { Featuers } from "../utils/featuers.js";
+import { userModel } from "../Database/Models/user.model.js";
 
 export const createOrder = asyncHandler(async (req, res, next) => {
   const cart = await cartModel.findById(req.params.cartId);
@@ -23,8 +24,12 @@ export const createOrder = asyncHandler(async (req, res, next) => {
       total: totalOrderPrice,
     },
   });
-
   await order.save();
+  const user = await userModel.findById(req.user._id);
+  cart.items.forEach((item) => {
+    user.enrolledCourses.push(item.course._id);
+  });
+  await user.save();
   await cartModel.findByIdAndDelete(req.params.cartId);
   res.status(201).json({
     message: "success",

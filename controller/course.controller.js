@@ -27,7 +27,7 @@ export const createCourse = asyncHandler(async (req, res) => {
 
 //read Courses_________________________________________
 export const getCourses = asyncHandler(async (req, res) => {
-  const totalPages = Math.ceil((await cousreModel.countDocuments()) / 3);
+  const totalPages = Math.ceil((await cousreModel.countDocuments()) / 20);
   let featuers = new Featuers(
     cousreModel.find().populate("category", "name"),
     req.query
@@ -40,7 +40,7 @@ export const getCourses = asyncHandler(async (req, res) => {
 
   let courses = await featuers.mongooseQuery;
   // const courses = await cousreModel.find();
-  let hasNextPage = courses.length === 3;
+  let hasNextPage = courses.length === 20;
   if (hasNextPage) {
     return res.status(200).json({
       status: "success",
