@@ -48,6 +48,8 @@ courseRouter
   .route("/:courseId/basics")
   .patch(courseController.uploadCourseBasics);
 
+courseRouter.route("/public/:courseId").patch(courseController.publishCourse);
+
 // courseRouter
 //   .route("/imageUpload")
 //   .post(

@@ -35,6 +35,14 @@ export const createLecture = asyncHandler(async (req, res) => {
   res.status(201).json({ message: "success", data: lecture });
 });
 
+export const updateOneLecture = asyncHandler(async (req, res) => {
+  const lecture = await Lecture.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!lecture) return next(new AppError("Lecture not found", 404));
+  res.status(200).json({ message: "success", data: lecture });
+});
+
 /**
  * @desc Update a lecture
  * @route /api/lectures/:id

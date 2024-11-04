@@ -34,19 +34,19 @@ const userSchema = new mongoose.Schema(
     enrolledCourses: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "course",
+        ref: "Course",
       },
     ],
     wishlist: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "course",
+        ref: "Course",
       },
     ],
     favorite: [
       {
         type: mongoose.Types.ObjectId,
-        ref: "course",
+        ref: "Course",
       },
     ],
     headline: {

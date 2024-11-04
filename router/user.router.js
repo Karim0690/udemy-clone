@@ -24,4 +24,5 @@ userRouter
 userRouter.put("/change-password/:id", userController.changeUserPassword);
 userRouter.post("/change-email/:id", userController.updateEmail);
 userRouter.post("/close-account/:id", userController.closeAccount);
+userRouter.get("/enrolled/:id", userController.getUserCourses);
 export default userRouter;

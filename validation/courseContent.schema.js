@@ -3,6 +3,8 @@ import Joi from "joi";
 export const CreatingCourseContent = Joi.object({
   title: Joi.string().min(3).max(80).required(),
   objective: Joi.string().max(200),
+  title_Ar: Joi.string().min(3).max(80).required(),
+  objective_Ar: Joi.string().max(200),
   items: Joi.array()
     .items(
       Joi.object({

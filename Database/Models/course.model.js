@@ -30,11 +30,9 @@ const courseSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      maxlength: 500,
     },
     description_Ar: {
       type: String,
-      maxlength: 500,
     },
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
@@ -135,6 +133,11 @@ const courseSchema = new mongoose.Schema(
     welcomeMessage: { type: String, minlength: 3, maxlength: 1000 },
     congratesMessage: { type: String, minlength: 3, maxlength: 1000 },
     duration: { type: Number, default: 0 },
+    courseState: {
+      type: String,
+      enum: ["public", "draft"],
+      default:"draft"
+    },
   },
   { timestamps: true, collection: "Courses" }
 );

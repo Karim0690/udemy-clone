@@ -6,6 +6,7 @@ import {
   getAllLectures,
   getLectureById,
   updateLecture,
+  updateOneLecture
 } from "../controller/lecture.controller.js";
 import {
   validateCreatingLecture,
@@ -22,6 +23,7 @@ router
   .post(validation(validateCreatingLecture), createLecture);
 
 router.route("/:id").get(getLectureById);
+router.route("/update/:id").put(updateOneLecture);
 
 router
   .route("/:id/course/:courseId")

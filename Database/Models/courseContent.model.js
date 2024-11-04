@@ -9,7 +9,15 @@ const courseSectionsSchema = new mongoose.Schema(
       maxlength: 80,
       trim: true,
     },
+    title_Ar: {
+      type: String,
+      required: true,
+      minlength: 3,
+      maxlength: 80,
+      trim: true,
+    },
     objective: { type: String, maxlength: 200, trim: true },
+    objective_Ar: { type: String, maxlength: 200, trim: true },
     items: [
       {
         type: {

@@ -93,6 +93,22 @@ const closeAccount = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "success" });
 });
 
+const getUserCourses = asyncHandler(async (req, res, next) => {
+  let user = await userModel
+    .findById(req.params.id)
+    .select("enrolledCourses")
+    .populate({
+      path: "enrolledCourses",
+      populate: {
+        path: "instructor",
+      },
+    });
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  res.status(200).json({ message: "success", user });
+});
+
 export {
   createUser,
   getAllUsers,
@@ -102,4 +118,5 @@ export {
   changeUserPassword,
   updateEmail,
   closeAccount,
+  getUserCourses,
 };

@@ -9,6 +9,8 @@ export const validateCreatingQuiz = Joi.object({
 export const validateUpdateQuiz = Joi.object({
   id: Joi.string().hex().length(24).required(),
   title: Joi.string(),
-  description: Joi.string(),
+  title_ar: Joi.string(),
+  description: Joi.string().allow(""),
+  description_ar: Joi.string().allow(""),
   questions: Joi.array().items(Joi.string()),
 });

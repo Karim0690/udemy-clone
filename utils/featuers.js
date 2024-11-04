@@ -41,6 +41,8 @@ export class Featuers {
       this.mongooseQuery.find({
         $or: [
           { title: { $regex: this.queryString.keyword, $options: "i" } },
+          { title_Ar: { $regex: this.queryString.keyword, $options: "i" } },
+          { title_ar: { $regex: this.queryString.keyword, $options: "i" } },
           { name: { $regex: this.queryString.keyword, $options: "i" } },
         ],
       });

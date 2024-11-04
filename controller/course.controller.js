@@ -216,6 +216,23 @@ export const uploadCourseBasics = asyncHandler(async (req, res, next) => {
   });
 });
 
+// //upload submit course_______________________________________________
+export const publishCourse = asyncHandler(async (req, res, next) => {
+  const { courseId } = req.params;
+  const course = await cousreModel.findByIdAndUpdate(
+    courseId,
+    { courseState: "public" },
+    {
+      new: true,
+    }
+  );
+  if (!course) return next(new AppError("course not found", 404));
+  res.status(200).json({
+    message: "success",
+    data: course,
+  });
+});
+
 // //upload course image_______________________________________________
 // export const uploadCourseImage = asyncHandler(async (req, res, next) => {
 //   if (!req.file) return next(new AppError("File not Provided", 404));
