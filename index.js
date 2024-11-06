@@ -33,14 +33,14 @@ app.use(cors());
 // }
 
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // Change to true in production with HTTPS
-    },
-  })
+    session({
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+            secure: false, // Change to true in production with HTTPS
+        },
+    })
 );
 
 app.use(express.json());
@@ -68,7 +68,7 @@ app.use("/coupon", couponRouter);
 app.use("/topic", topicRouter);
 
 app.all("*", (req, res, next) => {
-  next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
+    next(new AppError(`can't find this route : ${req.originalUrl}`, 404));
 });
 
 app.use(globalErrorHandler);
@@ -76,5 +76,5 @@ app.use(globalErrorHandler);
 dbconnection();
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
-  console.log(`server is running on port ${port}`);
+    console.log(`server is running on port ${port}`);
 });
