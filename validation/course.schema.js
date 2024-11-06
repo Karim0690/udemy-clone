@@ -2,6 +2,7 @@ import Joi from "joi";
 
 export const createCourseSchema = Joi.object({
   title: Joi.string().min(5).max(100).required(),
+  title_Ar: Joi.string().min(5).max(100).required(),
   instructor: Joi.string().hex().length(24).required(),
   category: Joi.string().hex().length(24).required(),
 });

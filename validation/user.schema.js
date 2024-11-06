@@ -6,7 +6,7 @@ export const validateCreatingUser = Joi.object({
     lastName:Joi.string().trim().allow("").optional(),
     email: Joi.string().email().trim().required(),
     password: Joi.string().min(8).required(),
-    photo: Joi.string().uri().allow("").optional(),
+    profilePic: Joi.string().uri().allow("").optional(),
     role: Joi.array()
         .items(Joi.string().valid("student", "instructor", "admin"))
         .default(["student"]),

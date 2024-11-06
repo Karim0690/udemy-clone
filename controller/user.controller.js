@@ -109,6 +109,20 @@ const getUserCourses = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "success", user });
 });
 
+const addUserRole = asyncHandler(async (req, res, next) => {
+  let user = await userModel.findByIdAndUpdate(
+    req.params.id,
+    {
+      $push: { role: "instructor" },
+    },
+    { new: true }
+  );
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  res.status(200).json({ message: "success", user });
+});
+
 export {
   createUser,
   getAllUsers,
@@ -119,4 +133,5 @@ export {
   updateEmail,
   closeAccount,
   getUserCourses,
+  addUserRole,
 };

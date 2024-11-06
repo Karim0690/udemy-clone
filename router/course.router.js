@@ -42,26 +42,17 @@ courseRouter
 
 courseRouter
   .route("/:instructorId/instructor")
-  .get(courseController.findUserCourses);
+  .get(
+    protectedRoutes,
+    restrictedTo("instructor"),
+    courseController.findUserCourses
+  );
 
 courseRouter
   .route("/:courseId/basics")
   .patch(courseController.uploadCourseBasics);
 
 courseRouter.route("/public/:courseId").patch(courseController.publishCourse);
-
-// courseRouter
-//   .route("/imageUpload")
-//   .post(
-//     uploadFile("courseImage", "Course"),
-//     courseController.uploadCourseImage
-//   );
-// courseRouter
-//   .route("/videoUpload")
-//   .post(
-//     uploadFile("promotionalVideo", "Course"),
-//     courseController.uploadCourseVideo
-//   );
 
 export default courseRouter;
 

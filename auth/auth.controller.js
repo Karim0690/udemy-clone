@@ -27,23 +27,33 @@ export const signup = catchAsync(async (req, res, next) => {
 
 export const signin = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
-  const user = await userModel.findOne({ email });
-  if (user && (await bcrypt.compare(password, user.password))) {
-    const token = jwt.sign(
-      {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        enrolledCourses: user.enrolledCourses,
-        profilePic: user.profilePic,
-      },
-      process.env.JWT_SECRET,
-      { expiresIn: "1y" }
-    );
-    return res.status(200).json({ message: "success", token });
+  if (!email || !password) {
+    return next(new AppError("Please provide email and password!", 400));
   }
-  return next(new AppError("Incorrect Email or Password!", 401));
+  // Find user by email
+  const user = await userModel.findOne({ email });
+
+  // If user doesn't exist or password is incorrect
+  if (!user || !(await bcrypt.compare(password, user.password))) {
+    return next(new AppError("Incorrect Email or Password!", 401));
+  }
+
+  const token = jwt.sign(
+    {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      enrolledCourses: user.enrolledCourses,
+      profilePic: user.profilePic,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN || "1y" }
+  );
+  res.status(200).json({
+    message: "success",
+    token,
+  });
 });
 
 export const forgetPassword = catchAsync(async (req, res, next) => {

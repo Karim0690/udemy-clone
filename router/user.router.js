@@ -7,6 +7,7 @@ import {
 } from "../validation/user.schema.js";
 
 import { validation } from "../middleware/validation.js";
+import { protectedRoutes } from "../middleware/authourtization.js";
 
 const userRouter = express.Router();
 
@@ -25,4 +26,5 @@ userRouter.put("/change-password/:id", userController.changeUserPassword);
 userRouter.post("/change-email/:id", userController.updateEmail);
 userRouter.post("/close-account/:id", userController.closeAccount);
 userRouter.get("/enrolled/:id", userController.getUserCourses);
+userRouter.route("/role/:id").put(protectedRoutes,userController.addUserRole)
 export default userRouter;

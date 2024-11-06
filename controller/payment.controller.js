@@ -47,7 +47,7 @@ export const createPayment = async (req, res) => {
             breakdown: {
               item_total: {
                 currency_code: "USD",
-                value: cart.totalPrice.toFixed(2),
+                value: cart.totalPrice.toFixed(2).toString(),
               },
               discount: {
                 currency_code: "USD",

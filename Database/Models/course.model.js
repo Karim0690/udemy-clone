@@ -41,6 +41,7 @@ const courseSchema = new mongoose.Schema(
     },
     price: {
       type: String,
+      default: "",
     },
     level: {
       type: String,
@@ -136,7 +137,7 @@ const courseSchema = new mongoose.Schema(
     courseState: {
       type: String,
       enum: ["public", "draft"],
-      default:"draft"
+      default: "draft",
     },
   },
   { timestamps: true, collection: "Courses" }
