@@ -232,6 +232,40 @@ export const publishCourse = asyncHandler(async (req, res, next) => {
     data: course,
   });
 });
+//get public course_______________________________________________
+export const getPublicCourses = asyncHandler(async (req, res, next) => {
+  const totalCourses = await cousreModel.countDocuments({ courseState: "public" });
+  const totalPages = Math.ceil(totalCourses / 20);
+
+  let featuers = new Featuers(
+    cousreModel
+      .find({ courseState: "public" })
+      .populate("sections")
+      .populate("topics")
+      .populate("relatedTopic")
+      .populate("instructor")
+      .populate("category")
+      .populate("subcategory"),
+    req.query
+  )
+    .pagination()
+    .filter()
+    .sort()
+    .fields()
+    .search();
+  let courses = await featuers.mongooseQuery;
+  const hasNextPage = featuers.page * 20 < totalCourses;
+
+  return res.status(200).json({
+    status: "success",
+    data: {
+      page: featuers.page,
+      nextPage: hasNextPage ? featuers.page + 1 : null,
+      totalPages,
+      courses,
+    },
+  });
+});
 
 // //upload course image_______________________________________________
 // export const uploadCourseImage = asyncHandler(async (req, res, next) => {

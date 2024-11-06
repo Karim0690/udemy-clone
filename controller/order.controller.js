@@ -26,9 +26,13 @@ export const createOrder = asyncHandler(async (req, res, next) => {
   });
   await order.save();
   const user = await userModel.findById(req.user._id);
-  cart.items.forEach((item) => {
-    user.enrolledCourses.push(item.course._id);
-  });
+  if (!user) return next(new AppError("User not found", 404));
+
+  // Avoid adding duplicate courses to enrolledCourses
+  const courseIds = cart.items.map(item => item.course._id);
+  user.enrolledCourses = [...new Set([...user.enrolledCourses, ...courseIds])];
+
+  // Save the user with the updated enrolledCourses
   await user.save();
   await cartModel.findByIdAndDelete(req.params.cartId);
   res.status(201).json({

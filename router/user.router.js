@@ -26,5 +26,6 @@ userRouter.put("/change-password/:id", userController.changeUserPassword);
 userRouter.post("/change-email/:id", userController.updateEmail);
 userRouter.post("/close-account/:id", userController.closeAccount);
 userRouter.get("/enrolled/:id", userController.getUserCourses);
-userRouter.route("/role/:id").put(protectedRoutes,userController.addUserRole)
+userRouter.route("/role/:id").put(protectedRoutes, userController.addUserRole);
+userRouter.route("/passchange/:id").patch(userController.changePassword);
 export default userRouter;

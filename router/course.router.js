@@ -52,6 +52,7 @@ courseRouter
   .route("/:courseId/basics")
   .patch(courseController.uploadCourseBasics);
 
+courseRouter.route("/public/courses").get(courseController.getPublicCourses);
 courseRouter.route("/public/:courseId").patch(courseController.publishCourse);
 
 export default courseRouter;

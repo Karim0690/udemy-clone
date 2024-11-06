@@ -123,6 +123,20 @@ const addUserRole = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "success", user });
 });
 
+const changePassword = asyncHandler(async (req, res, next) => {
+  let user = await userModel.findByIdAndUpdate(
+    req.params.id,
+    { password: req.body.password },
+    {
+      new: true,
+    }
+  );
+  if (!user) {
+    return next(new AppError("User not Found", 404));
+  }
+  res.status(200).json({ message: "success", user });
+});
+
 export {
   createUser,
   getAllUsers,
@@ -134,4 +148,5 @@ export {
   closeAccount,
   getUserCourses,
   addUserRole,
+  changePassword
 };
