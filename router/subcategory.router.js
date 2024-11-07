@@ -1,6 +1,9 @@
 import express from "express";
 import * as subcategoryController from "../controller/subcategory.controller.js";
-
+import {
+  protectedRoutes,
+  restrictedTo,
+} from "../middleware/authourtization.js";
 import {
   createSubcategorySchema,
   updateSubcategorySchema,
@@ -13,6 +16,8 @@ const subcategoryRouter = express.Router();
 subcategoryRouter
   .route("/")
   .post(
+    protectedRoutes,
+    restrictedTo("admin"),
     validation(createSubcategorySchema),
     subcategoryController.createSubcategory
   )

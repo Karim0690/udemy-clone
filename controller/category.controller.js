@@ -5,9 +5,21 @@ import { Featuers } from "../utils/featuers.js";
 import topicModel from "../Database/Models/topic.model.js";
 
 const createCategory = asyncHandler(async (req, res, next) => {
-  let result = new categoryModel(req.body);
-  await result.save();
-  res.status(201).json({ message: "success", result });
+  const { name, nameAr } = req.body;
+  const existingCategory = await categoryModel.findOne({
+    $or: [{ name }, { nameAr }],
+  });
+  if (existingCategory) {
+    return res
+      .status(400)
+      .json({ message: "Category with this name already exists" });
+  }
+  const category = new categoryModel({
+    name,
+    nameAr,
+  });
+  await category.save();
+  res.status(201).json({ message: "success", category });
 });
 
 // const getAllCategory = asyncHandler(async (req, res, next) => {
@@ -95,6 +107,12 @@ const getCategorySubCategories = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "success", result: result.subcategories });
 });
 
+const getCategoryBySlug = asyncHandler(async(req,res,next)=>{
+  let result = await categoryModel.findOne({slug:req.params.slug}).populate("subcategories");
+  if(!result) next(new AppError("Category not found", 404));
+  res.status(200).json({message:"success", result});
+})
+
 export {
   createCategory,
   getAllCategory,
@@ -102,4 +120,5 @@ export {
   updateCategory,
   deleteCategory,
   getCategorySubCategories,
+  getCategoryBySlug
 };

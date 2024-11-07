@@ -16,7 +16,12 @@ const categoryRouter = express.Router();
 
 categoryRouter
   .route("/")
-  .post(validation(createCategorySchema), categoryController.createCategory)
+  .post(
+    protectedRoutes,
+    restrictedTo("admin"),
+    validation(createCategorySchema),
+    categoryController.createCategory
+  )
   .get(categoryController.getAllCategory);
 
 categoryRouter
@@ -28,5 +33,7 @@ categoryRouter
 categoryRouter
   .route("/:categoryid/subcategories")
   .get(categoryController.getCategorySubCategories);
+
+categoryRouter.route("/slug/:slug").get(categoryController.getCategoryBySlug);
 
 export default categoryRouter;

@@ -5,12 +5,21 @@ import {
   updateTopicSchema,
 } from "../validation/topic.schema.js";
 import { validation } from "../middleware/validation.js";
+import {
+  protectedRoutes,
+  restrictedTo,
+} from "../middleware/authourtization.js";
 
 const topicRouter = express.Router();
 
 topicRouter
   .route("/")
-  .post(validation(createTopicSchema), topicController.createTopic)
+  .post(
+    protectedRoutes,
+    restrictedTo("admin"),
+    validation(createTopicSchema),
+    topicController.createTopic
+  )
   .get(topicController.getAllTopics);
 topicRouter
   .route("/:id")

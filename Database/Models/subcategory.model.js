@@ -5,30 +5,30 @@ const subcategorySchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      unique: [true, "Name is requierd"],
+      unique: [true, "Name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too Short brand name"],
+      minLength: [2, "Too short subcategory name"],
     },
     nameAr: {
       type: String,
-      unique: [true, "Name is requierd"],
+      unique: [true, "Name is required"],
       trim: true,
       required: true,
-      minLength: [2, "too Short brand name"],
+      minLength: [2, "Too short subcategory name in Arabic"],
     },
     slug: {
       type: String,
       lowercase: true,
     },
     category: {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       required: true,
     },
     topics: [
       {
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "Topic",
       },
     ],
@@ -36,6 +36,7 @@ const subcategorySchema = new mongoose.Schema(
   { timestamps: true, collection: "Subcategory" }
 );
 
+// Create slug before saving a new subcategory
 subcategorySchema.pre("save", function (next) {
   if (this.isModified("name") || this.isNew) {
     this.slug = slugify(this.name, { lower: true });
@@ -43,10 +44,11 @@ subcategorySchema.pre("save", function (next) {
   next();
 });
 
+// Create slug during subcategory update
 subcategorySchema.pre("findOneAndUpdate", function (next) {
   const update = this.getUpdate();
   if (update.name) {
-    update.$set.slug = slugify(update.name, { lower: true });
+    update.slug = slugify(update.name, { lower: true });
   }
   next();
 });

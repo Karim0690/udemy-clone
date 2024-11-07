@@ -2,11 +2,33 @@ import { subcategoryModel } from "../Database/Models/subcategory.model.js";
 import asyncHandler from "express-async-handler";
 import AppError from "../utils/appError.js";
 import { Featuers } from "../utils/featuers.js";
+import { categoryModel } from "../Database/Models/category.model.js";
 
 const createSubcategory = asyncHandler(async (req, res) => {
-  let result = new subcategoryModel(req.body);
-  await result.save();
-  res.status(201).json({ message: "success", result });
+  const { name, nameAr, categoryId } = req.body;
+  const existingSubcategory = await subcategoryModel.findOne({
+    $or: [{ name }, { nameAr }],
+  });
+  if (existingSubcategory) {
+    return res
+      .status(400)
+      .json({ message: "Subcategory with this name already exists" });
+  }
+  const category = await categoryModel.findById(categoryId);
+  if (!category) {
+    return res.status(404).json({ message: "Category not found" });
+  }
+
+  const subcategory = new subcategoryModel({
+    name,
+    nameAr,
+    category: categoryId,
+  });
+
+  await subcategory.save();
+  category.subcategories.push(subcategory._id);
+  await category.save();
+  res.status(201).json({ message: "success", subcategory });
 });
 const getAllSubcategory = asyncHandler(async (req, res) => {
   const keyword = req.query.keyword || "";
@@ -19,7 +41,7 @@ const getAllSubcategory = asyncHandler(async (req, res) => {
           { nameAr: { $regex: keyword, $options: "i" } },
         ],
       })
-      .populate("category"),
+      .populate("category").populate("topics"),
     req.query
   )
     .filter()
