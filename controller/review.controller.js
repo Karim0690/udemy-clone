@@ -1,4 +1,6 @@
 import asyncHandler from "express-async-handler";
+import { cousreModel } from "../Database/Models/course.model.js";
+
 import {
   reviewModel,
   //   validateCreatingReview,
@@ -26,6 +28,37 @@ const getAllReview = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "success", data: reviews });
 });
+
+/**
+ * @desc Get all reviews with comments for a specific course
+ * @route GET /api/reviews/:courseId
+ * @method GET
+ * @access public
+ */
+const getAllReviewsWithCommentsByCourseId = asyncHandler(async (req, res) => {
+  const { courseId } = req.params;
+
+  // Check if courseId is provided
+  if (!courseId) {
+    return res.status(400).json({ message: "Course ID is required." });
+  }
+
+  try {
+    // Find all reviews for the given course ID that have a non-empty comment
+    const reviews = await reviewModel.find({
+      course: courseId,
+      comment: { $ne: "" }, // Ensures comment is not empty
+    }).populate('user', 'name'); // Populate the user field with just the name
+
+    res.status(200).json({ message: "success", data: reviews });
+  } catch (error) {
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
+
+
+
+
 /**
  * @desc Get Reviews By Id
  * @route /api/reviews/:id
@@ -54,24 +87,38 @@ const getReviewById = asyncHandler(async (req, res) => {
  * @access protected (user)
  */
 const createReview = asyncHandler(async (req, res) => {
-  console.log("Received request body:", req.body);
+  // console.log("Received request body:", req.body);
   const { course, user, rating, comment } = req.body;
+
+  // Validate required fields
   if (!course || !user || !rating) {
-    return res
-      .status(400)
-      .json({ message: "Course, user, and rating are required." });
+    return res.status(400).json({ message: "Course, user, and rating are required." });
   }
-  let review = new reviewModel({
+
+  // Create a new review
+  const review = new reviewModel({
     course,
     user,
     rating,
     comment,
   });
 
+  // Save the review
   const result = await review.save();
+
+  // Fetch all reviews for this course
+  const reviews = await reviewModel.find({ course });
+
+  // Calculate the new average rating
+  const averageRating =
+    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+
+  // Update the course with the new average rating
+  await cousreModel.findByIdAndUpdate(course, { rating: averageRating }, { new: true });
 
   res.status(201).json({ message: "success", data: result });
 });
+
 
 /**
  * @desc Update Review
@@ -121,4 +168,5 @@ export {
   createReview,
   updateReviewById,
   deleteReviewById,
+  getAllReviewsWithCommentsByCourseId
 };
