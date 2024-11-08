@@ -29,7 +29,14 @@ export const createCourse = asyncHandler(async (req, res) => {
 export const getCourses = asyncHandler(async (req, res) => {
   const totalPages = Math.ceil((await cousreModel.countDocuments()) / 20);
   let featuers = new Featuers(
-    cousreModel.find().populate("category", "name"),
+    cousreModel
+      .find()
+      .populate("category", "name")
+      .populate("topics")
+      .populate("relatedTopic")
+      .populate("instructor")
+      .populate("category")
+      .populate("subcategory"),
     req.query
   )
     .pagination()
@@ -100,13 +107,11 @@ export const getCourseByTitle = asyncHandler(async (req, res, next) => {
     .populate("topics")
     .populate("relatedTopic")
     .populate("instructor")
-    .populate("category", "name")
+    .populate("category")
     .populate({
       path: "subcategory",
-      select: "name topics",
       populate: {
         path: "topics",
-        select: "name",
       },
     });
 
@@ -234,7 +239,9 @@ export const publishCourse = asyncHandler(async (req, res, next) => {
 });
 //get public course_______________________________________________
 export const getPublicCourses = asyncHandler(async (req, res, next) => {
-  const totalCourses = await cousreModel.countDocuments({ courseState: "public" });
+  const totalCourses = await cousreModel.countDocuments({
+    courseState: "public",
+  });
   const totalPages = Math.ceil(totalCourses / 20);
 
   let featuers = new Featuers(
