@@ -92,36 +92,49 @@ const createReview = asyncHandler(async (req, res) => {
   if (!course || !user || !rating) {
     return res.status(400).json({ message: "Course, user, and rating are required." });
   }
+// Create a new review
+const review = new reviewModel({
+  course,
+  user,
+  rating: { average: rating, count: 1 }, // Ensure rating is wrapped in the correct structure
+  comment,
+});
 
-  // Create a new review
-  const review = new reviewModel({
-    course,
-    user,
-    rating,
-    comment,
-  });
+// Save the review
+const result = await review.save();
 
-  // Save the review
-  const result = await review.save();
+// Fetch all reviews for this course
+const reviews = await reviewModel.find({ course });
 
-  // Fetch all reviews for this course
-  const reviews = await reviewModel.find({ course });
+// Calculate the new average rating without using reduce
+let totalPercentage = 0;
+for (let i = 0; i < reviews.length; i++) {
+  // Convert the rating to a percentage (1-5 scale to 0-100 scale)
+  const percentageRating = (reviews[i].rating.average - 1) * 25;
+  totalPercentage += percentageRating;
+}
 
-  // Calculate the new average rating
-  const averageRating =
-    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+// Calculate the average percentage
+let averagePercentage = reviews.length > 0 ? totalPercentage / reviews.length : 0;
 
-  // Update the course with the new average rating and increment the review count
-  const updatedCourse = await cousreModel.findByIdAndUpdate(
-    course,
-    {
-      $set: { "rating.average": averageRating }, // Update the average rating
-      $inc: { "rating.count": 1 }               // Increment the review count
-    },
-    { new: true }
-  );
+// Convert the average percentage back to a 1-5 scale
+let averageRating = (averagePercentage / 25) + 1;
 
-  res.status(201).json({ message: "success", data: result, updatedCourse });
+// Ensure the average rating is between 1 and 5
+averageRating = Math.min(Math.max(averageRating, 1), 5);
+
+// Update the course with the new average rating and increment the review count
+const updatedCourse = await courseModel.findByIdAndUpdate(
+  course,
+  {
+    $set: { "rating.average": averageRating }, // Update the average rating
+    $inc: { "rating.count": 1 },               // Increment the review count
+  },
+  { new: true }
+);
+
+res.status(201).json({ message: "success", data: result, updatedCourse });
+
 });
 
 
