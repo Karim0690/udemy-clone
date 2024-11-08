@@ -48,7 +48,7 @@ const getAllReviewsWithCommentsByCourseId = asyncHandler(async (req, res) => {
     const reviews = await reviewModel.find({
       course: courseId,
       comment: { $ne: "" }, // Ensures comment is not empty
-    }).populate('user', 'name'); // Populate the user field with just the name
+    }).populate('user', 'name photo'); // Populate the user field with just the name
 
     res.status(200).json({ message: "success", data: reviews });
   } catch (error) {
@@ -81,13 +81,11 @@ const getReviewById = asyncHandler(async (req, res) => {
 });
 
 /**
- * @desc create Review
- * @route /api/reviews
- * @method POST
+ * @desc Create Review
+ * @route POST /api/reviews
  * @access protected (user)
  */
 const createReview = asyncHandler(async (req, res) => {
-  // console.log("Received request body:", req.body);
   const { course, user, rating, comment } = req.body;
 
   // Validate required fields
@@ -113,11 +111,19 @@ const createReview = asyncHandler(async (req, res) => {
   const averageRating =
     reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
 
-  // Update the course with the new average rating
-  await cousreModel.findByIdAndUpdate(course, { rating: averageRating }, { new: true });
+  // Update the course with the new average rating and increment the review count
+  const updatedCourse = await cousreModel.findByIdAndUpdate(
+    course,
+    {
+      $set: { "rating.average": averageRating }, // Update the average rating
+      $inc: { "rating.count": 1 }               // Increment the review count
+    },
+    { new: true }
+  );
 
-  res.status(201).json({ message: "success", data: result });
+  res.status(201).json({ message: "success", data: result, updatedCourse });
 });
+
 
 
 /**
