@@ -92,36 +92,38 @@ const createReview = asyncHandler(async (req, res) => {
   if (!course || !user || !rating) {
     return res.status(400).json({ message: "Course, user, and rating are required." });
   }
-
-  // Create a new review
-  const review = new reviewModel({
-    course,
-    user,
-    rating,
+// Create a new review
+const review = new reviewModel({
+  course,
+  user,
+  rating,
     comment,
-  });
+});
 
-  // Save the review
-  const result = await review.save();
+// Save the review
+const result = await review.save();
 
-  // Fetch all reviews for this course
-  const reviews = await reviewModel.find({ course });
+// Fetch all reviews for this course
+const reviews = await reviewModel.find({ course });
 
-  // Calculate the new average rating
-  const averageRating =
-    reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+// Calculate the new average rating
+const totalRatings = reviews.reduce((acc, review) => acc + review.rating, 0);
+const averageRating = reviews.length > 0 ? (totalRatings / reviews.length) : 0;
 
   // Update the course with the new average rating and increment the review count
-  const updatedCourse = await cousreModel.findByIdAndUpdate(
-    course,
-    {
-      $set: { "rating.average": averageRating }, // Update the average rating
-      $inc: { "rating.count": 1 }               // Increment the review count
-    },
-    { new: true }
-  );
 
-  res.status(201).json({ message: "success", data: result, updatedCourse });
+const updatedCourse = await cousreModel.findByIdAndUpdate(
+  course,
+  {
+    $set: {
+      "rating.average": averageRating, // Set the calculated average rating
+      "rating.count": reviews.length    // Set the count to the number of reviews
+    }
+  },
+  { new: true }
+);
+
+res.status(201).json({ message: "success", data: result, updatedCourse });
 });
 
 
