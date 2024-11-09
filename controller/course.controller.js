@@ -252,7 +252,10 @@ export const getPublicCourses = asyncHandler(async (req, res, next) => {
       .populate("relatedTopic")
       .populate("instructor")
       .populate("category")
-      .populate("subcategory"),
+      .populate({path:"subcategory",populate:{
+        path: "topics",
+        select:"name nameAr"
+      }}),
     req.query
   )
     .pagination()

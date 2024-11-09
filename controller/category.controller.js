@@ -107,11 +107,17 @@ const getCategorySubCategories = asyncHandler(async (req, res, next) => {
   res.status(200).json({ message: "success", result: result.subcategories });
 });
 
-const getCategoryBySlug = asyncHandler(async(req,res,next)=>{
-  let result = await categoryModel.findOne({slug:req.params.slug}).populate("subcategories");
-  if(!result) next(new AppError("Category not found", 404));
-  res.status(200).json({message:"success", result});
-})
+const getCategoryBySlug = asyncHandler(async (req, res, next) => {
+  let result = await categoryModel.findOne({ slug: req.params.slug }).populate({
+    path: "subcategories",
+    populate: {
+      path: "topics",
+      select: "name nameAr",
+    },
+  });
+  if (!result) next(new AppError("Category not found", 404));
+  res.status(200).json({ message: "success", result });
+});
 
 export {
   createCategory,
@@ -120,5 +126,5 @@ export {
   updateCategory,
   deleteCategory,
   getCategorySubCategories,
-  getCategoryBySlug
+  getCategoryBySlug,
 };

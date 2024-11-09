@@ -33,25 +33,6 @@ export const validateUpdatingUser = Joi.object({
 
     firstName: Joi.string().min(2).max(255).trim().optional(),
     lastName: Joi.string().min(2).max(255).trim().optional(),
-    language: Joi.string()
-        .valid(
-            "English (US)",
-            "Canada",
-            "France",
-            "Germany",
-            "Spain",
-            "Italy",
-            "UK",
-            "Netherlands",
-            "Australia",
-            "New Zealand",
-            "India",
-            "Brazil",
-            "Mexico",
-            "China",
-            "Russia"
-        )
-        .optional(),
 
     id: Joi.string().hex().length(24).required(),
     name: Joi.string().min(2).max(255).trim().optional(),
